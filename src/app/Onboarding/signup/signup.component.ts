@@ -12,6 +12,16 @@ import { University } from '../../Core/_models/university';
 import { CustomFormValidation } from '../../Core/_models/form-validation';
 import { environment } from '../../../environments/environment';
 
+// NativeScript Imports
+import application = require("tns-core-modules/application");
+import { getFrameById } from 'tns-core-modules/ui/frame';
+
+
+const frame = getFrameById("signupFrame");
+// Navigate from Signup component to Login component
+frame.navigate("login");
+
+
 const httpOptions = {
   headers: new HttpHeaders({
     'Content-Type':  'application/json',
@@ -134,3 +144,10 @@ export class SignupComponent implements OnInit {
     this.loading = false;
   }
 }
+
+
+// Dont place any code below this final line as it will not execute when running the NativeScript app
+// This is the inital starting point of the app!  Dont change unless we do a team discussin and design changes
+// ~ Noah
+
+application.run({ moduleName: "signup"  });
