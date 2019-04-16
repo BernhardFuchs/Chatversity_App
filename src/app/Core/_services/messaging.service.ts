@@ -2,7 +2,9 @@ import { Injectable, OnInit } from '@angular/core';
 import {AuthService} from './auth.service';
 import { ChatManager, TokenProvider } from '@pusher/chatkit-client';
 import { User } from '../_models/user';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Subscription } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../environments/environment.prod';
 
 
 @Injectable({
@@ -17,6 +19,7 @@ export class MessagingService {
   chatManager: any;
   chatkitUser: any;
   messages = [];
+  currentUserSubscription: Subscription;
 
   _message = '';
   get message(): string {
@@ -26,32 +29,33 @@ export class MessagingService {
     this._message = value;
   }
 
-  constructor( private authenticationService: AuthService) {
+  constructor(private http: HttpClient) {}
 
-    this.authenticationService.currentUser.subscribe(x => {
-      this.currentUser = x;
 
-      this.chatManager = new ChatManager({
-        instanceLocator: 'v1:us1:a54bdf12-93d6-46f9-be3b-bfa837917fb5',
-        userId: this.currentUser._embedded.user.id,
-        tokenProvider: new TokenProvider({
-          url: 'https://us1.pusherplatform.io/services/chatkit_token_provider/v1/a54bdf12-93d6-46f9-be3b-bfa837917fb5/token'
-        })
-      });
+
+  //
+  // ─── GET ALL OF A USERS READ CURSORS ────────────────────────────────────────────
+  //
+    getReadCursorsForUser(id: number | string) {
+
+      return this.http.get(`${environment.apiUrl}/chatkit/getReadCursorsForUser/${id}`);
+    }
+  // ─────────────────────────────────────────────────────────────────
+
+
+
+  initialize(userId) {
+    this.chatManager = new ChatManager({
+      instanceLocator: 'v1:us1:a54bdf12-93d6-46f9-be3b-bfa837917fb5',
+      userId: userId,
+      tokenProvider: new TokenProvider({
+        url: 'https://us1.pusherplatform.io/services/chatkit_token_provider/v1/a54bdf12-93d6-46f9-be3b-bfa837917fb5/token'
+      })
     });
 
-
-
-    // TODO: Add this to an addUser function - only call when necessary
-    // this.chatManager
-    // .connect()
-    // .then(currentUser => {
-    //   console.log('Connected as user ', currentUser);
-    //   this.chatkitUser = currentUser;
-    // })
-    // .catch(error => {
-    //   console.error('error:', error);
-    // });
+    return this.chatManager.connect().then(user => {
+      return user;
+    });
   }
 
   setRoomsWithNotifications(count) {
@@ -79,17 +83,17 @@ export class MessagingService {
   }
 
   // Join a room
-  // joinRoom(roomID) {
-  //   return this.chatkitUser.joinRoom( { roomId: roomID } )
-  //   .then(room => {
-  //     console.log(`Joined room with ID: ${room.id}`);
-  //     // Subscribe to room to receive notifications
-  //     return room;
-  //   })
-  //   .catch(err => {
-  //     console.log(`Error joining room ${roomID}: ${err}`);
-  //   });
-  // }
+  joinRoom(roomID) {
+    return this.chatkitUser.joinRoom( { roomId: roomID } )
+    .then(room => {
+      console.log(`Joined room with ID: ${room.id}`);
+      // Subscribe to room to receive notifications
+      return room;
+    })
+    .catch(err => {
+      console.log(`Error joining room ${roomID}: ${err}`);
+    });
+  }
 
   // Subscribe to room
   subscribeToRoom(roomID) {

@@ -1,0 +1,6 @@
+.custom-shadow{
+    box-shadow: 0 0px 2px #26B1FF;
+}
+.custom-shadow:hover{
+    box-shadow: 0 0px 4px #26B1FF;
+}

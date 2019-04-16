@@ -1,6 +1,6 @@
 <div class="container w-100 h-100" style="background-color: white;">
     <div class="row">
-      <div class="col-12 text-center">
+      <div class="col-12 text-center mt-5">
         <div class="mt-5">
             <p class="h1 text-secondary my-5 text-strong">Thank you for signing up with <span class="text-primary">Chatversity</span> 
               <img src="/assets/images/logo-mark-64.png" class="img-fluid img-responsive mx-auto mb-3" width="64px" style="padding-left:10px;"
@@ -12,8 +12,8 @@
                   Would you like to set up your profile now?
                 </p>
                 <div class="mt-5">
-                  <a [routerLink]="['/profile']"><button class="btn btn-primary mt-2 styled-btn">Yes</button></a> &nbsp;
-                  <a [routerLink]="['/dashboard']"><button class="btn btn-outline-primary mt-2 styled-btn">No</button></a>
+                  <a [routerLink]="['/settings']" [queryParams]="{view:'profile'}"><button class="btn btn-primary mt-2 styled-btn">Yes</button></a> &nbsp;
+                  <a [routerLink]="['/home']"><button class="btn btn-outline-primary mt-2 styled-btn">No</button></a>
                 </div>
             </div>
         </div>

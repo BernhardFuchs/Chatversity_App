@@ -27,64 +27,143 @@ router.get('/', (req, res) => {
     res.send('Chatkit server route works');
 });
 
-// TODO: Place this in messaging service?
-// TODO: Dynamically pull config vars from env
-const chatkit = new Chatkit.default({
-  instanceLocator: 'v1:us1:a54bdf12-93d6-46f9-be3b-bfa837917fb5',
-  key: '9d72d14f-ca75-4f3e-b7ff-553ca6cc929a:LQKR0oU5u56yMIFtEBqLECL0vhNRXllLNvgtXTLOeh0=',
-});
 
-router.post('/testing', (req, res) => {
-  console.log(req.body);
-  // res.status(201).send(req);
-  return;
-  mongoose.connect('mongodb+srv://chatversity_admin:Te0PU0MZzEQOIvmB@primary-qvaqq.mongodb.net/live_db?retryWrites=true', {useNewUrlParser: true});
 
-  var db = mongoose.connection;
-  db.on('error', console.error.bind(console, 'connection error:'));
-  db.once('open', function() {
-    // we're connected!
-    console.log('mongoose connected');
+//
+// ─── INSTANTIATE CHATKIT ────────────────────────────────────────────────────────
+//
 
-    // Define file schema
-    var fileSchema = new mongoose.Schema({
-      avatar: String
-    });
-  
-    // Create object from schema
-    var File = mongoose.model('files', fileSchema, 'files');
-  
-    var file = new File({avatar: req.body.file})
-    file.save(function (err, file) {
-      if (err) return console.error(err);
-      else { return console.log(file); }
-    });
-  
-    // File.find(function (err, files) {
-    //   if (err) return console.error(err);
-    //   console.log(files);
-    // })
-
-  // axios.post('https://webhook.site/68f42878-3fc6-4974-8fbe-0e434e858be6', req)
-  // .then(function (response) {
-  //   // console.log(response);
-  //   res.status(200).json(response.data);
-  // })
-  // .catch(function (error) {
-  //   console.log('error');
-  // });
+  // TODO: Dynamically pull config vars from env
+  const chatkit = new Chatkit.default({
+    instanceLocator: 'v1:us1:a54bdf12-93d6-46f9-be3b-bfa837917fb5',
+    key: '9d72d14f-ca75-4f3e-b7ff-553ca6cc929a:LQKR0oU5u56yMIFtEBqLECL0vhNRXllLNvgtXTLOeh0=',
   });
-});
+// ────────────────────────────────────────────────────────────────────────────────
 
-// Get a User
-router.post('/getuser', (req, res) => {
 
+
+  //
+  // ─── GET READ CURSORS FOR USER ──────────────────────────────────────────────────
+  //
+  router.get('/getReadCursorsForUser/:id', (req, res) => {
+
+    chatkit
+        .getReadCursorsForUser({
+          userId: req.id,
+        })
+        .then(cursors => console.log('got cursors', cursors))
+        .catch(err => console.error(err))
+  })
+  // ────────────────────────────────────────────────────────────────────────────────
+
+  
+
+
+
+//
+// ─── GET ALL CONNECTIONS FOR A USER BY ID ───────────────────────────────────────
+//
+
+  router.get('/connections/:id', (req, res) => {
     chatkit.getUser({
-        id: req.body.user_id,
+      // Get the user
+      id: req.params.id,
+    })
+    .then((user) => {
+      // Then get all of the users connections
+      chatkit.getUsersById({
+        userIds: user.custom_data.connections,
+      })
+      .then(users => res.status(200).json(users))
+      .catch(err => console.error(err))
+    })
+    .catch(err => res.status(500).send(err))
+  })
+// ────────────────────────────────────────────────────────────────────────────────
+
+
+
+//
+// ─── UPDATE USER ────────────────────────────────────────────────────────────────
+// 
+
+  // TODO: Richie add update user here 
+  router.post('/user/:id', (req, res) => {
+    // console.log(req.body)
+    // console.log(req)
+    // console.log(req.body);
+
+    
+    console.log(req.body);
+
+    let name = req.body.name;
+
+    delete req.body.name;
+
+    chatkit.updateUser({
+      id: req.params.id,
+      name: name,
+      customData: req.body,
+    }).then(() => {
+
+      console.log('User updated successfully');
+
+      chatkit.getUser({
+        id: req.params.id,
+      })
+      .then((user) => {
+        console.log(user)
+        res.status(200).json(user) // Return the updated user
+      })
+
+    }).catch((err) => {
+      console.log(err);
+    });
+    // .then(() => {
+    //   res.status(200).send('Success!')
+    //   console.log(`User updated successfuly!`)
+      
+    // })
+    // .catch((err) => {
+    //   res.status(500)
+    //   console.log(err)
+    // })
+    
+  });
+// ────────────────────────────────────────────────────────────────────────────────
+
+
+
+//
+// ─── GET USER ───────────────────────────────────────────────────────────────────
+//
+  
+  router.post('/getuser', (req, res) => {
+
+      chatkit.getUser({
+          id: req.body.user_id,
+      })
+      .then(user => res.status(200).json(user))
+      .catch(err => res.status(500).send(err));
+  });
+// ────────────────────────────────────────────────────────────────────────────────
+
+
+
+//
+// ─── GET USER BY ID ─────────────────────────────────────────────────────────────
+//
+
+  router.get('/GetUserById/:userId', (req, res) => {
+    chatkit.getUser({
+      id: req.params.userId,
     })
     .then(user => res.status(200).json(user))
-    .catch(err => res.status(500).send(err));
-});
+    .catch(error => res.status(500).send(error))
+  })
+// ────────────────────────────────────────────────────────────────────────────────
+
+
 
 var type = upload.single('file');
 // Upload room or user avatar to Mongo
@@ -118,6 +197,26 @@ router.post('/upload/avatar', type, (req, res) => {
   //   //   console.log(files);
   //   // })
   });
+
+  //
+  // ─── CREATE USER ────────────────────────────────────────────────────────────────
+  //
+
+    router.post('/createuser', (req, res) => {
+      console.log(req.body)
+      chatkit.createUser({
+        id: req.body.id,
+        name: req.body.name,
+        customData: req.body.custom_data,
+      })
+        .then(() => {
+          res.status(200).json('{ }');
+          console.log('User created successfully');
+        }).catch((err) => {
+          console.log(err);
+        });
+    })
+  // ────────────────────────────────────────────────────────────────────────────────
 
 
 

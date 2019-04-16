@@ -12,7 +12,6 @@
     position: relative;
 }
 
-
 .message-wrap {
 
     background:#F3F6F8;
@@ -68,4 +67,21 @@
     letter-spacing: 0.75px;
     padding:10px;
     color: #94B0C0;
+}
+
+.custom-btn{
+    border-radius: 5px;
+    color: #96B7C9;
+    background-color: #F1F8FC;
+}
+.custom-btn:hover{
+    background-color: white;
+    color: #0E425F;
+    border: 1px solid #bddef1;
+}
+
+.active{
+    background-color: white !important;
+    color: #0E425F;
+    border: 1px solid #bddef1;
 }

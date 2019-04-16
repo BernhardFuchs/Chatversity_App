@@ -17,10 +17,11 @@ export class AuthGuard implements CanActivate {
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
       const currentUser = this.authService.currentUserValue;
         if (currentUser) {
+          console.log('USER AUTHORIZED');
             // User authorized so return true
             return true;
         }
-
+        console.log('USER NOT AUTHORIZED');
         // not logged in so redirect to login page via UrlTree
         const url = '/login';
         const tree: UrlTree = this.router.parseUrl(url);

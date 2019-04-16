@@ -7,9 +7,13 @@
 $theme-colors: (
   "primary": #26B1FF,
   "secondary":#0E425F,
+  "secondary-light": #186fa0,
   "light":#96B7C9,
   "lighter":#F1F8FC,
-  "danger": #ff4136
+  "lightest": #fafdff,
+  "light-gray": #DAE6ED,
+  "danger": #ff4136,
+  "info": #FF247F,
 );
 
 @import '../node_modules/bootstrap/scss/bootstrap.scss';
@@ -17,16 +21,19 @@ $theme-colors: (
 html, body {
     font-size: 16px; // Base font size
     font-family: "Poppins", "Nunito", "Proxima Nova", sans-serif;
-    min-height: 100%;    // Cover Full Screen
+    height: 100vh;    // Cover Full Screen
     width: 100%;     // Cover Full Screen
     scroll-behavior: smooth;
-  }
+}
+
+body{
+  overflow-x: hidden;
+}
 
 app-messages, app-rooms {
     width: calc(100vw - 88px);
     height: 100%;
     background-color:#DAE6ED;
-    overflow-y: scroll;
 }
 
 .text-strong{
@@ -40,5 +47,46 @@ app-messages, app-rooms {
 .app-main {
   display: flex;
   width: calc(100vw - 88px);
+  /*width: 100%;*/
   flex-direction: column;
+}
+
+.custom-btn{
+  border-radius: 5px;
+  color: #96B7C9;
+  background-color: #F1F8FC;
+}
+.custom-btn:hover{
+  background-color: white;
+  color: #0E425F;
+  border: 1px solid #bddef1;
+}
+
+.page-content{
+  height: calc(100% - 57px);
+}
+@media (min-width: 768px){ 
+  .page-content{
+    height: calc(100% - 70px);
+  }
+}
+
+.user-action-btn{
+  color: #0E425F;
+}
+.user-action-btn:hover{
+  border: 1px solid #0E425F;
+}
+
+.fa, .fas {
+  font-family: "Font Awesome 5 Pro" !important;
+}
+
+.chat-user-link { 
+  &:focus { outline: none; }
+  &:hover {
+    cursor: pointer;
+    text-decoration: underline;
+    outline: none;
+  }
 }

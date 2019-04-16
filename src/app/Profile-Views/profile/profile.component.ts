@@ -7,6 +7,11 @@ import { NgForm, FormGroup, FormBuilder, Validators, FormControl, MaxLengthValid
 import { ActivatedRoute, Router } from '@angular/router';
 import { User } from '../../Core/_models/user';
 import { UserProfile } from '../../Core/_models/profile';
+import { AuthService } from '../../Core/_services/auth.service';
+import { MessagingService } from '../../Core/_services/messaging.service';
+import { environment } from '../../../environments/environment.prod';
+import { UserService } from '../../Core/_services/user.service';
+import { AppComponent } from '../../app.component';
 
 @Component({
   selector: 'app-profile',
@@ -16,25 +21,79 @@ import { UserProfile } from '../../Core/_models/profile';
 
 export class ProfileComponent implements OnInit {
 
-  user: User;
-  profile: UserProfile;
+  user: any;
+  chatkitUser: any;
+  connections: any;
+  subscription: any;
+
+  name = '';
+  bio = '';
+  major = '';
+  graduationYear = '';
+  interests = '';
+  clubs = '';
 
   constructor(
     private formBuilder: FormBuilder,
     private route: ActivatedRoute,
-    private router: Router) { }
+    private router: Router,
+    private authService: AuthService,
+    private msgService: MessagingService,
+    private http: HttpClient,
+    private _auth: AuthService,
+    private userService: UserService,
+    private app: AppComponent) {
 
-  ngOnInit() {
-    this.user = {
-      id: 2,
-      firstName: 'Scott',
-      lastName: 'Peterson',
-      username: 'peter610@mail.nmc.edu',
-      password: undefined,
-      university: { id: 3, name: 'NMC', state:"MI", domains:null },
-      profile: { bio: "Hello world!", major: "CIS", graduationYear: 2021, interests: "Shooting, Riding, and the Outdoors", clubs: "Phi Theta Kappa" },
+    this.subscription = this._auth.chatkitUser$.subscribe(
+      (user) => {
+        this.chatkitUser = user;
+        console.log(this.chatkitUser);
+        this.initForm();
+      }
+    );
     }
 
-    this.profile = this.user.profile;
+  ngOnInit() {
+  }
+
+  initForm() {
+    console.log(this.chatkitUser.name);
+
+    try{
+      this.name = this.chatkitUser.name;
+    } catch (error) {
+      this.name = '';
+    }
+
+    try {
+      this.bio = this.chatkitUser.customData.bio;
+    } catch (error) {
+      this.bio = '';
+    }
+
+    try {
+      this.major = this.chatkitUser.customData.major;
+    } catch (error) {
+      this.major = '';
+    }
+
+    try {
+      this.graduationYear = this.chatkitUser.customData.graduationYear;
+    } catch (error) {
+      this.graduationYear = '';
+    }
+
+    try {
+      this.interests = this.chatkitUser.customData.interests;
+    } catch (error) {
+      this.interests = '';
+    }
+
+    try {
+      this.clubs = this.chatkitUser.customData.clubs;
+    } catch (error) {
+      this.clubs = '';
+    }
+    // ─────────────────────────────────────────────────────────────────
   }
 }

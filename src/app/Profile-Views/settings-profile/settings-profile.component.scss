@@ -1,7 +1,10 @@
 input[disabled], textarea[disabled] {
-    background-color: #f7f7f7;
+    background-color: #F1F8FC;
     border: none;
-    border-radius: 0px;
-    border-bottom: 1px solid #26B1FF;
+    border:1px solid #DAE6ED;
     resize: none;
+}
+
+.no-edit-label{
+    color: #186fa0;
 }

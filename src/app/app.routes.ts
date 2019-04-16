@@ -10,7 +10,6 @@ import { RouteGuard } from './Core/_guards/route.guard';
 import { SettingsComponent } from './Settings-Views/settings/settings.component';
 import { MessagesComponent } from './messages/messages.component';
 import { SettingsProfileComponent } from './Profile-Views/settings-profile/settings-profile.component';
-import { SmallComponent } from './Profile-Views/small/small.component';
 import { NewUserComponent } from './Onboarding/new-user/new-user.component';
 import { ViewNavigationHomeComponent } from './Home/view-navigation-home/view-navigation-home.component';
 import { RoomsComponent } from './rooms/rooms.component';
@@ -26,7 +25,6 @@ export const routes: Routes = [
     { path: 'settings',  component: SettingsComponent, canActivate: [AuthGuard] },
     { path: 'rooms',  component: RoomsComponent, canActivate: [AuthGuard] },
     { path: 'messages',  component: MessagesComponent, canActivate: [AuthGuard] },
-    { path: 'user-profile', component: SmallComponent, canActivate: [AuthGuard] },
     { path: 'settings-profile', component: SettingsProfileComponent, canActivate: [AuthGuard] },
     { path: 'home', component: ViewNavigationHomeComponent, canActivate: [AuthGuard] },
     { path: 'new-user', component: NewUserComponent, canActivate: [AuthGuard] },

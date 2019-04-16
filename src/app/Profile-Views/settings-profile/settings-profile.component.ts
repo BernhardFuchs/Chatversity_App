@@ -7,6 +7,10 @@ import { NgForm, FormGroup, FormBuilder, Validators, FormControl, MaxLengthValid
 import { ActivatedRoute, Router } from '@angular/router';
 import { User } from '../../Core/_models/user';
 import { UserProfile } from '../../Core/_models/profile';
+import { AuthService } from '../../Core/_services/auth.service';
+import { MessagingService } from '../../Core/_services/messaging.service';
+import { environment } from '../../../environments/environment.prod';
+import { UserService } from '../../Core/_services/user.service';
 
 @Component({
   selector: 'app-settings-profile',
@@ -18,107 +22,171 @@ export class SettingsProfileComponent implements OnInit {
   loading = false;
   submitted = false;
   editMode = false;
-  returnUrl: string;
-  user: User;
+  user: any;
   profile: UserProfile;
+  subscription: any;
+  chatkitUser: any;
+  editingForm = false;
 
-  constructor(    
+  name = '';
+  bio = '';
+  major = '';
+  graduationYear = '';
+  interests = '';
+  clubs = '';
+
+  constructor(
     private formBuilder: FormBuilder,
     private route: ActivatedRoute,
-    private router: Router) { }
+    private router: Router,
+    private _auth: AuthService,
+    private msgService: MessagingService,
+    private http: HttpClient,
+    private userService: UserService) {
 
-  ngOnInit() {
-  
-    //
-    // ToDo: Get user data from service
-    //
+      this._auth.chatkitUser$.subscribe(
+        (user) => {
+          this.chatkitUser = user;
+          console.log(this.chatkitUser);
+          this.initForm();
+        }
+      );
 
-    // Create test user
-    this.user = {
-      id: 1,
-      firstName: 'Richie',
-      lastName: 'Tarkowski',
-      username: 'tarkowr@mail.nmc.edu',
-      password: undefined,
-      university: { id: 3, name: 'NMC', state:'MI', domains:null },
-      profile: { bio: "Hello world!", major: "CIS", graduationYear:2021, interests:"Running, NBA, and CS", clubs:"bball"},
     }
-
-    this.profile = this.user.profile;
-    
-    // Build new form
-    this.profileForm = this.formBuilder.group({
-      firstname: [{value:this.user.firstName, disabled:!this.editMode}, Validators.required],
-      lastname: [{value:this.user.lastName, disabled:!this.editMode}, Validators.required],
-      bio: [{value:this.profile.bio, disabled:!this.editMode}, MaxLengthValidator],
-      major: [{value:this.profile.major, disabled:!this.editMode}, MaxLengthValidator],
-      graduationYear: [{value:this.profile.graduationYear, disabled:!this.editMode}, MaxLengthValidator],
-      interests: [{value:this.profile.interests, disabled:!this.editMode}, MaxLengthValidator],
-      clubs: [{value:this.profile.clubs, disabled:!this.editMode}, MaxLengthValidator]
-    });
-  }
 
   // Convenience getter for easy access to form fields
   get f() { return this.profileForm.controls; }
 
-  // Activate edit mode
-  onClickEdit() { 
-    this.editMode = true;
-    this.profileForm.enable();
+  onSaveClick(){
+    if(this.profileForm){
+      if(this.profileForm.invalid){
+        this.submitted = true;
+        return;
+      }
+    }
+
+    this.submitted = false;
+    this.editingForm = !this.editingForm;
   }
 
+
   // Validation and other actions upon form submission
-  onSubmit() { 
+  onSubmit() {
+    console.log('form submitted');
+
     this.submitted = true;
     this.loading = true;
 
     // stop here if form is invalid
     if (this.profileForm.invalid) {
       this.loading = false;
+      console.log('ERROR: Form invalid');
       return;
     }
 
-    // Disable form so user cannot edit
-    this.profileForm.disable();
-    this.editMode = false;
-
     // Get updated profile data from user
-    let _fname:string = this.profileForm.get('firstname').value;
-    let _lname:string = this.profileForm.get('lastname').value;
-    let _bio:string = this.profileForm.get('bio').value;
-    let _major:string = this.profileForm.get('major').value;
-    let _gradYr:number = this.profileForm.get('graduationYear').value;
-    let _interests:string = this.profileForm.get('interests').value;
-    let _clubs:string = this.profileForm.get('clubs').value;
+    const _name: string = this.profileForm.get('name').value;
+    const _bio: string = this.profileForm.get('bio').value;
+    const _major: string = this.profileForm.get('major').value;
+    const _gradYr: number = this.profileForm.get('graduationYear').value;
+    const _interests: string = this.profileForm.get('interests').value;
+    const _clubs: string = this.profileForm.get('clubs').value;
 
-    // Update the user object
-    this.user.firstName = _fname;
-    this.user.lastName = _lname;
-    this.user.profile.bio = _bio;
-    this.user.profile.major = _major;
-    this.user.profile.graduationYear = _gradYr;
-    this.user.profile.interests = _interests;
-    this.user.profile.clubs = _clubs;
+    // Get current user custom data
+    const currentUserData = this.chatkitUser.customData;
+    console.log('Current user data: ');
+    console.log(currentUserData);
 
-    console.log(this.user);
 
-    // Create obj to hold formdata
-    const formData: FormData = new FormData();
+    // Add update data
+    currentUserData['name'] = _name;
+    currentUserData['bio'] = _bio;
+    currentUserData['major'] = _major;
+    currentUserData['graduationYear'] = _gradYr;
+    currentUserData['interests'] = _interests;
+    currentUserData['clubs'] = _clubs;
 
-    // Append input to form data
-    formData.append('firstname', _fname);
-    formData.append('lastname', _lname);
-    formData.append('bio', _bio);
-    formData.append('major', _major);
-    formData.append('graduationYear', _gradYr.toString());
-    formData.append('interests', _interests);
-    formData.append('clubs', _clubs);
+    // Send the updated data and update the user
+    this.userService.update(this.chatkitUser.id, JSON.stringify(currentUserData))
+    .toPromise()
+    .then((data) => {
 
-    //
-    // ToDo: Send FormData to service to update Pusher/MongoDB
-    //
+      console.log(data);
+      console.log(this.chatkitUser);
 
-    this.loading = false;
+      this.setUserProfile(data);
+
+      this.editingForm = false;
+      this.loading = false;
+    });
+  }
+
+  initForm() {
+    this.getUserProfile();
+
+    // Build Form
+    this.profileForm = this.formBuilder.group({
+      // Name
+      name: [ this.name, Validators.required ],
+      // Bio
+      bio: [ this.bio, MaxLengthValidator ],
+      // Major
+      major: [ this.major, MaxLengthValidator ],
+      // Graduation year
+      graduationYear: [ this.graduationYear, MaxLengthValidator ],
+      // Interests
+      interests: [ this.interests, MaxLengthValidator ],
+        // Clubs
+      clubs: [ this.clubs, MaxLengthValidator ]
+    });
+  }
+
+  setUserProfile(userData) {
+    this.chatkitUser.customData.avatarURL = userData.avatar_url;
+    this.chatkitUser.customData.customData = userData.custom_data;
+    this.chatkitUser.name = userData.name;
+    this.chatkitUser.updatedAt = userData.updated_at;
+  }
+
+  getUserProfile() {
+    try {
+      this.name = this.chatkitUser.name;
+    } catch (error) {
+      this.name = '';
     }
 
+    try {
+      this.bio = this.chatkitUser.customData.bio;
+    } catch (error) {
+      this.bio = '';
+    }
+
+    try {
+      this.major = this.chatkitUser.customData.major;
+    } catch (error) {
+      this.major = '';
+    }
+
+    try {
+      this.graduationYear = this.chatkitUser.customData.graduationYear;
+    } catch (error) {
+      this.graduationYear = '';
+    }
+
+    try {
+      this.interests = this.chatkitUser.customData.interests;
+    } catch (error) {
+      this.interests = '';
+    }
+
+    try {
+      this.clubs = this.chatkitUser.customData.clubs;
+    } catch (error) {
+      this.clubs = '';
+    }
+  }
+
+
+  ngOnInit() {
+  }
 }

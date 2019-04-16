@@ -1,27 +1,35 @@
-<!-- Button trigger modal -->
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#profileModal">
-  Launch demo modal
-</button>
-
 <!-- Modal -->
-<div class="modal fade col-10 offset-1 col-md-6 offset-md-3 col-lg-6 offset-lg-3" id="profileModal" tabindex="-1"
+<div *ngIf="user" id="profileModal" class="modal hide fade col-10 offset-1 col-md-6 offset-md-3" tabindex="-1"
   role="dialog" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content text-center">
-      <!-- Profile Image -->
-      <img src="..." onerror="this.src='../../assets/images/DefaultProfile.png'"
-        class="col-6 offset-3 col-md-4 offset-md-4 rounded img-fluid mx-auto mt-5 mb-1 d-block">
-      <!-- User's Name -->
-      <h3 class="col-8 offset-2 col-md-6 offset-md-3 mt-2 text-primary">{{this.user.firstName}} {{this.user.lastName}}
-      </h3>
-      <!-- User's Info -->
-      <p class="col-4 offset-4 col-md-2 offset-md-5 text-secondary">{{this.user.profile.graduationYear}}</p>
-      <p class="col-8 offset-2 col-md-6 offset-md-3 text-secondary mt-2">{{this.user.profile.bio}}</p>
+
+      <!--Header-->
+      <div class="modal-header" style="border:none;">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true" style="font-size:1.75rem;">&times;</span>
+        </button>
+      </div>
+
+      <!--Body-->
+      <div class="modal-body">
+        <!-- Profile Image -->
+        <img src="..." onerror="this.src='../../assets/images/DefaultProfile.png'" id="user-image"
+        class="rounded img-fluid mx-auto mb-1 d-block">
+
+        <!-- User's Name -->
+        <div class="h3 text-secondary text-light-weight mt-3">{{ this.user.name }} </div>
+
+        <!-- User's Info -->
+        <p class="text-primary">&mdash; Class of {{this.user.customData.graduationYear}} &mdash;</p>
+        <p class="text-secondary mt-2">{{ this.user.customData.bio }}</p>
+      </div>
+
       <!-- Footer -->
       <div class="modal-footer">
-        <button type="button" class="btn btn-link mx-auto my-4">ADD CONNECTION</button>
-        <button type="button" class="btn btn-link mx-auto my-4" data-dismiss="modal">CLOSE</button>
-
+        <button type="button" class="btn btn-primary mx-auto py-2 px-3 text-uppercase" (click)="addConnection()"
+        *ngIf="!isConnection">Add Connection</button>
+        <span class="text-light mx-auto py-2" *ngIf="isConnection">You are connected with this user!</span>
       </div>
     </div>
   </div>

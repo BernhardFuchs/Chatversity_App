@@ -1,32 +1,42 @@
-<!DOCTYPE html>
-<html>
-<body>
-    <div class="container py-3 vh-100">
-        <div class="text-center">
-            <!-- Profile Image -->
-            <img src="..." onerror="this.src='../../assets/images/DefaultProfile.png'"
-                class="col-10 offset-1 col-md-4 offset-md-4 rounded img-fluid mx-auto mt-5 mb-1 d-block" >
-            <!-- User's Name -->
-            <h1 class="col-12 mt-2 text-primary">{{this.user.firstName}} {{this.user.lastName}}
-            </h1>
-            <!-- User's Info -->
-            <div class="row">
-                <div class="col text-right"><h3>{{this.user.profile.major}}</h3></div>
-                <div class="col-auto"><h3>|</h3></div>
-                <div class="col text-left"><h3>{{this.user.profile.graduationYear}}</h3></div>
+<div class="container-fluid py-3">
+    <div class="text-center">
+        <div class="row mt-5 mb-3">
+            <div class="col-12 col-lg-4 mt-1 pr-2" id="profile-picture-container">
+                <!-- Profile Image -->
+                <img src="" onerror="this.src='../../../assets/images/DefaultProfile.png'" id="user-image"
+                class="rounded img-fluid mb-1 d-block" >
             </div>
-            <!-- <h3 class="col-12 text-secondary">{{this.user.profile.major}} | {{this.user.profile.graduationYear}}</h3> -->
-            <hr />
-            <div class="col-12 col-md-8 offset-md-2 row">
-                <p class="col-6 col-md-3 offset-md-3 text-left">Clubs:</p>
-                <p class="col-6 col-md-3 text-left">{{this.user.profile.clubs}}</p>
+
+            <div class="col-12 col-lg-7 text-left" id="profile-content">
+                <ng-container *ngIf="this.chatkitUser">
+                    <!-- User Name -->
+                    <div class="h2 text-secondary text-light-weight">{{ this.name }}</div>
+                    <!-- {{ this.user.avatarURL }} -->
+                    <!-- <ng-container *ngIf="this.user.presence.state">
+                        User is online!
+                    </ng-container> -->
+
+                    <!-- User Major and Graduation Year -->
+                    <div>
+                        <span class="text-primary text-uppercase" style="font-weight:100;">{{ this.major }} &nbsp;|&nbsp; Class of {{ this.graduationYear }}</span><br>
+                    </div>
+    
+                    <!--User Bio-->
+                    <div class="text-left mt-3">
+                        <p>{{this.bio}}</p> 
+                    </div>
+    
+                    <!--User Clubs-->
+                    <div class="text-left">
+                        <p><span class="text-secondary-light">Clubs: &nbsp;</span> {{ this.clubs }}</p>
+                    </div>
+    
+                    <!--User Interests-->
+                    <div class="text-left">
+                        <p><span class="text-secondary-light">Interests: &nbsp;</span> {{ this.interests }}</p>
+                    </div>
+                </ng-container>
             </div>
-            <div class="col-12 col-md-8 offset-md-2 row">
-                <p class="col-6 col-md-3 offset-md-3 text-left">Interests:</p>
-                <p class="col-6 col-md-3 text-left">{{this.user.profile.interests}}</p>
-            </div>
-            <p class="col-8 offset-2 col-md-6 offset-md-3 text-secondary mt-2">{{this.user.profile.bio}}</p>
         </div>
     </div>
-</body>
-</html>
+</div>

@@ -4,6 +4,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule, Routes } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
 import { AuthService } from './Core/_services/auth.service';
+import { UserService } from './Core/_services/user.service';
 
 // Angular Bootstrap
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
@@ -56,6 +57,12 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
 import { RoomsComponent } from './rooms/rooms.component';
+import { ScrollToTopDirective } from './scroll-to-top.directive';
+import { PrivacySettingsComponent } from './Settings-Views/privacy-settings/privacy-settings.component';
+import { SecuritySettingsComponent } from './Settings-Views/security-settings/security-settings.component';
+import { ConnectionSettingsComponent } from './Settings-Views/connection-settings/connection-settings.component';
+import { TopBarComponent } from './Shared/top-bar/top-bar.component';
+import { MessagingService } from './Core/_services/messaging.service';
 
 const config = {
   issuer: 'https://dev-117825.okta.com',
@@ -87,7 +94,12 @@ const config = {
     ViewLatestNewsComponent,
     ViewNavigationHomeComponent,
     ViewFriendsHomeComponent,
-    RoomsComponent
+    RoomsComponent,
+    ScrollToTopDirective,
+    PrivacySettingsComponent,
+    SecuritySettingsComponent,
+    ConnectionSettingsComponent,
+    TopBarComponent
   ],
   imports: [
     RouterModule.forRoot(routes),
@@ -104,9 +116,11 @@ const config = {
   providers: [
     OktaAuthGuard,
     OktaAuthService,
-    AuthService
+    AuthService,
+    UserService,
+    MessagingService
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
 
 export class AppModule { }

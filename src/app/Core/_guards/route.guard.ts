@@ -12,19 +12,19 @@ export class RouteGuard implements CanActivate {
       private router: Router,
       private authService: AuthService
   ) {}
-  
-    canActivate(
-      next: ActivatedRouteSnapshot,
-      state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-        const currentUser = this.authService.currentUserValue;
-          if (!currentUser) {
-              // User is not authorized so return true
-              return true;
-          }
-  
-          // User is ogged in so redirect to login page via UrlTree
-          const url = '/dashboard';
-          const tree: UrlTree = this.router.parseUrl(url);
-          return tree;
-    }
+
+  canActivate(
+    next: ActivatedRouteSnapshot,
+    state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
+      const currentUser = this.authService.currentUser;
+        if (!currentUser) {
+            // User is not authorized so return true
+            return true;
+        }
+
+        // User is ogged in so redirect to login page via UrlTree
+        const url = '/login';
+        const tree: UrlTree = this.router.parseUrl(url);
+        return tree;
   }
+}

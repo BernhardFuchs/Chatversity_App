@@ -1,76 +1,84 @@
-<div class="container-fluid">
-  <div class="row shadow-sm align-items-center py-2" id="messages_header">
-    <div class="col-4">
-        <div class="d-flex align-items-center">
-          <span class="text-uppercase">Rooms</span>
-          <!-- Add Room -->
-          <button type="button" class="ml-auto btn btn-outline-primary" data-toggle="modal" data-target="#addRoomModal" (click)="roomCreated = false" placement="left" ngbTooltip="Create Room" triggers="hover" [autoClose]="true">
-            <i class="fa fa-plus"></i>
-          </button>
-        </div>
-    </div>
-    <div class="col-8">
-      <div class="d-flex align-items-center">
-        <ng-container *ngIf="current_room">
-            <span class="text-uppercase">{{ current_room.name }}</span>
-        </ng-container>
-          <!-- Add Room -->
-          <button type="button" class="ml-auto btn btn-outline-primary" data-toggle="modal" data-target="#addRoomModal" placement="left" ngbTooltip="Edit Room" triggers="hover" [autoClose]="true">
-            <i class="fa fa-cog"></i>
-          </button>
-        </div>
-    </div>
-  </div>
-  <div class="row" style="height: calc(100vh - 54px);">
-    <div class="col-4 h-100 overflow-auto">
+<div class="container-fluid" style="height:100vh;">
+
+  <ng-container *ngIf="current_room">
+    <app-top-bar [viewName]="'Rooms'" [headerText]="current_room.name"></app-top-bar>
+  </ng-container>
+
+  <ng-container *ngIf="!current_room">
+    <app-top-bar [viewName]="'Rooms'" [headerText]="'Chat'"></app-top-bar>
+  </ng-container>
+
+  <!--<button type="button" class="ml-auto btn btn-outline-primary" data-toggle="modal" data-target="#addRoomModal" placement="left" ngbTooltip="Edit Room" triggers="hover" [autoClose]="true">
+    <i class="fa fa-cog"></i>
+  </button>-->
+
+  <div class="row page-content">
+    <div class="col-12 col-lg-3 overflow-auto" style="background-color:#F1F8FC; border-bottom:1px solid #DAE6ED;">
         
           <!-- Begin rooms list -->
           <div id="messages" class="row">
-            <div class="col-12">
-              <div class="message-wrap">
-                  <!-- Font Awesome Profile Silouhette(?) -->
-                  <i class="fas fa-user fa-lg mr-3" style="color: #C3D3DC;"></i>
-                  <!-- Load users profile picture here -->
-                  <img src="/assets/images/dummy_profile_pic.pc" height="36" width="36" class="rounded-circle border border-success">
-                  <!-- Load users name here -->
-                  <span class="ml-3 mr-5" style="font-weight: bold; color: #115073;">User 5</span>
-                  <!-- Disable or change the text to something relevant -->
-                  <span class="badge ml-5 pl-2 pr-2" style="background-color: #FF247F; color: #FFF;">new</span>
-                  <div class="text-uppercase pl-5" style="font-weight: bold; color: #94B0C0" id="status">online</div>
-              </div>
-            </div>
-            <ng-container *ngFor="let room of rooms">
-              <div class="col-12" (click)="joinRoom(room.id)">
-                  <div class="message-wrap room d-flex align-items-center justify-content-between">
-                    <ng-container *ngIf="room?.customData !== undefined">
-                      <div class="" [ngStyle]="{ 'background-image': 'url(assets/avatars/' + room.customData.roomAvatar + ')', 'height':'50px', 'width':'50px', 'background-size':'cover', 'background-position':'center, center' }">
+            <div class="col-12 my-2 px-3">
+                <button class="btn btn-block custom-btn text-left mr-4 my-2 p-3 user-action-btn"  data-toggle="modal"
+                 data-target="#addRoomModal" (click)="roomCreated = false">New Room <i class="fa fa-plus"></i> </button>
+
+                <ng-container *ngFor="let room of rooms">
+                <button class="btn btn-block custom-btn text-left my-2 p-3" (click)="joinRoom(room.id)"
+                [ngClass]="{ 'active': current_room.id == room.id }">
+                    <div class="room d-flex align-items-center justify-content-between">
+                        <ng-container *ngIf="room?.custom_data !== undefined">
+                            <div class="" [ngStyle]="{ 'background-image': 'url(assets/avatars/' + room.customData.roomAvatar + ')', 'height':'50px', 'width':'50px', 'background-size':'cover', 'background-position':'center, center' }">
+                            </div>
+                        </ng-container>
+                        <span>{{ room.name }}</span>
+                        <span *ngIf="roomNotifications[room.id]" class="badge badge-secondary">New</span>
                       </div>
-                    </ng-container>
-                    <span class="text-secondary">{{ room.name }}</span>
-                    <span *ngIf="roomNotifications[room.id]" class="badge badge-secondary">New</span>
-                  </div>
+                  </button>
+                </ng-container>
               </div>
-            </ng-container>
             <div *ngIf="(currentUser)" class="col-12">
                 <div class="message-wrap">
                   <img src="{{currentUser.avatarURL}}" alt="">
                   <span>{{ currentUser.name }}</span>
+                  <button class="btn btn-link" (click)="viewUserModal">{{ currentUser.name }}</button>
                 </div>
             </div>
           </div>
     </div>
-    <div class="col-8 h-100 overflow-auto" style="background:#FAFDFF;">
-      <div class="chat-window h-100 overflow-auto">
+    <div class="col-12 col-lg-9 overflow-auto" style="background-color: #fafdff; border-left:1px solid #DAE6ED;">
+      <div class="chat-window overflow-auto" style="height: calc(100vh - 157px); position:relative;">
         <ng-container *ngIf="room_messages">
-          <div *ngFor="let message of room_messages">{{ message.parts[0].payload.content }}</div>
+          <div class="container-fluid mt-3" #chatReel>
+            <div *ngFor="let message of room_messages">
+                <ng-container *ngIf="message.room.id===current_room.id">
+                    <div class="row" id="chatReel">
+                        <!-- Messages -->
+                        <div class="col-12">
+                            <span role="button" tabindex="0" class="chat-user-link text-secondary font-weight-bold" (click)="setSelectedRoomMember(current_room.userStore.users[message.senderId])" data-toggle="modal" data-target="#profileModal">
+                                {{ current_room.userStore.users[message.senderId].name }}
+                            </span>
+                          <small class="text-muted" style="font-size:12px;">{{ message.createdAt | date:'shortTime' }}</small>
+                          <p style="color:#626e7a; font-size:15px;">{{ message.parts[0].payload.content }}</p>
+                          <hr>
+                        </div>
+                      </div>
+                </ng-container>
+              
+            </div>
+          </div>
         </ng-container>
       </div>
       <div class="chat-footer" style="position: absolute; bottom: 0; left: 0; width: 100%;">
+        <!--TODO: Change placeholder to only display room name if room name is defined-->
         <form (ngSubmit)='sendMessage()'>
-          <input placeholder="Type a message. Hit Enter to send" type="text" name="message" [(ngModel)]="message">
+          <input [placeholder]="(current_room) ? 'Message ' + current_room.name : 'Message'" type="text" name="message" [(ngModel)]="message">
         </form>
       </div>
     </div>
+
+    <!-- view user modal -->
+    <app-small *ngIf="selectedRoomMember" [user]="selectedRoomMember" [isConnection]="isConnection"></app-small>
+    <!-- end view user modal -->
+    
   </div>
   <!-- Messages Header -->
 </div>

@@ -1,0 +1,19 @@
+#user-image{
+    max-width: 200px;
+    max-height: 200px;
+    border: 1px solid #0E425F;
+}
+#profile-picture-container > img{
+    margin: left;
+}
+#profile-content{
+    margin-top: 20px;
+}
+@media (min-width: 992px){ /*Large*/
+    #profile-content{
+        margin-top: 0px;
+    }
+    #profile-picture-container > img{
+        margin: 0 auto;
+    }
+}

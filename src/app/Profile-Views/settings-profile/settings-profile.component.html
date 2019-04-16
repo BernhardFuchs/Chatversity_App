@@ -1,98 +1,137 @@
-<div class="container">
-  <div class="w-100 h-100" style="background-color:white;">
+<div class="container-fluid">
     <div class="row">
-      <div class="col-12 col-sm-12 col-md-8 offset-md-2 col-lg-6 offset-lg-3 my-4">
-        <div class="text-center mb-5 mt-3">
-          <h2 class="text-secondary">Profile</h2>
-        </div>
-        <form [formGroup]="profileForm" (ngSubmit)="onSubmit()">
 
-          <div *ngIf="submitted && (f.firstname.errors || f.lastname.errors)">
-            <div class="alert alert-danger" role="alert">Unable to update profile.</div>
-          </div>
+      <!-- edit buttons -->
+      <div class="col-12 mt-4 mb-3">
 
-          <button *ngIf="!editMode" class="btn btn-primary btn-block my-3 py-3" (click)="onClickEdit()">EDIT PROFILE</button>
-          
-          <div class="row">
-            <div class="col-12 col-sm-6 col-md-6">
+        <!-- Button to show edit form -->
+        <button (click)="(editingForm == true ? onSubmit() : (editingForm = !editingForm))" [ngClass]="{'btn-primary': editingForm, 'btn-outline-primary': !editingForm}" class="btn px-3">
+          <i class="fa fa-edit" *ngIf="!editingForm"></i> {{ editingForm == true ? 'Save Changes' : 'Edit' }}
+        </button>
   
-              <!--First Name-->
-              <div class="form-group mb-3">
-                <label for="firstname" class="text-secondary">First Name <span class="text-danger" *ngIf="editMode">*</span></label>
-                <input type="text" class="form-control" id="firstname" name="firstname" placeholder="John" required
-                formControlName="firstname"
-                [ngClass]="{ 'is-invalid': submitted && f.firstname.errors }">
+        <!-- Button to cancel form edit => only shown when form is displayed -->
+        <button (click)="editingForm = !editingForm" *ngIf="editingForm" class="btn btn-outline-primary ml-2 px-3">
+          <i class="fa fa-times"></i> Cancel
+        </button>
 
-                <div *ngIf="submitted && f.firstname.errors" class="invalid-feedback">
-                  <div *ngIf="f.firstname.errors.required">Please provide your first name.</div>
-                </div>
+        <!--<div class="text-center">
+          <img *ngIf="loading"
+          src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />  
+        </div>-->
+
+      </div>
+      <!-- end edit buttons -->
+
+
+      <div class="col-12 col-sm-12 col-lg-8 my-3">
+        <ng-container *ngIf="chatkitUser">
+          <form *ngIf="editingForm" id="profileEditForm" [formGroup]="profileForm" (ngSubmit)="onSubmit()">
+  
+            <div *ngIf="submitted && f.name.errors">
+              <div class="alert alert-danger" role="alert">Unable to update profile.</div>
+            </div>
+  
+            <!-- <button *ngIf="!editMode" class="btn btn-primary btn-block my-3 py-3 text-uppercase" (click)="onClickEdit()">
+                Edit Profile <span class="fas fa-pencil ml-2"></span>
+            </button> -->
+            
+          <!--Name-->
+          <div class="form-group mb-3">
+              <label for="name" class="text-secondary">Name 
+                <span class="text-danger" *ngIf="editMode">*</span>
+              </label>
+              <input type="text" class="form-control" id="name" name="name" placeholder="John Doe" required
+              formControlName="name"
+              [ngClass]="{ 'is-invalid': submitted && f.name.errors }">
+  
+              <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
+                <div *ngIf="f.name.errors.required">Please provide your name.</div>
+              </div>
+            </div>
+       
+            <!--Bio-->
+            <div class="form-group mb-3">
+              <label for="bio" class="text-secondary">Bio</label>
+              <textarea class="form-control" id="bio" name="bio" maxlength="200" formControlName="bio" data-gramm_editor="false"></textarea>
+            </div>
+  
+            <div class="row">
+              <div class="col-12 col-lg-8">
+  
+                <!--Major-->
+                <div class="form-group mb-3">
+                  <label for="major" class="text-secondary">Major</label>
+                  <input type="text" class="form-control" id="major" name="major" placeholder="Computer Science" maxlength="100"
+                  formControlName="major">
                 </div>
               </div>
   
-              <!--Last Name-->
-              <div class="col-12 col-sm-6 col-md-6">
+              <!--Graduation Year-->
+              <div class="col-12 col-lg-4">
                 <div class="form-group mb-3">
-                  <label for="lastname" class="text-secondary">Last Name <span class="text-danger" *ngIf="editMode">*</span></label>
-                  <input type="text" class="form-control" id="lastname" name="lastname" placeholder="Doe" required
-                  formControlName="lastname"
-                  [ngClass]="{ 'is-invalid': submitted && f.lastname.errors }">
-
-                <div *ngIf="submitted && f.lastname.errors" class="invalid-feedback">
-                  <div *ngIf="f.lastname.errors.required">Please provide your last name.</div>
-                </div>
+                  <label for="graduationYear" class="text-secondary">Graduation Year</label>
+                  <input type="number" class="form-control" id="graduationYear" name="graduationYear" placeholder="2025"
+                  formControlName="graduationYear">
               </div>
             </div>
           </div>
-     
-          <!--Bio-->
-          <div class="form-group mb-3">
-            <label for="bio" class="text-secondary">Bio</label>
-            <textarea class="form-control" id="bio" name="bio" maxlength="200" formControlName="bio" data-gramm_editor="false"></textarea>
-          </div>
+  
+            <!--Interests-->
+            <div class="form-group mb-3">
+              <label for="major" class="text-secondary">Interests</label>
+              <input type="text" class="form-control" id="interests" name="interests" placeholder="What are your interests?" maxlength="100"
+              formControlName="interests">
+            </div>
+  
+            <!--Clubs-->
+            <div class="form-group mb-3">
+              <label for="clubs" class="text-secondary">Clubs</label>
+              <input type="text" class="form-control" id="clubs" name="clubs" placeholder="Which clubs are you involved in?" maxlength="100"
+              formControlName="clubs">
+            </div>
 
-          <div class="row">
-            <div class="col-12 col-sm-8 col-md-8">
+          </form>
 
-              <!--Major-->
-              <div class="form-group mb-3">
-                <label for="major" class="text-secondary">Major</label>
-                <input type="text" class="form-control" id="major" name="major" placeholder="Computer Science" maxlength="100"
-                formControlName="major">
-              </div>
+          <div *ngIf="!editingForm">
+
+            <!--Name-->
+            <div class="mb-3">
+              <span class="no-edit-label text-uppercase">Name</span> <br>
+              <span *ngIf="this.chatkitUser">{{ this.chatkitUser.name }}</span>
+            </div>
+      
+            <!--Bio-->
+            <div class="mb-3">
+              <span class="no-edit-label text-uppercase">Bio</span> <br>
+              <span> {{ this.chatkitUser.customData.bio }}</span>
+            </div>
+            
+            <!--Major-->
+            <div class="mb-3">
+              <span class="no-edit-label text-uppercase">Major</span> <br>
+              <span> {{ this.chatkitUser.customData.major }}</span>
             </div>
 
             <!--Graduation Year-->
-            <div class="col-12 col-sm-4 col-md-4">
-              <div class="form-group mb-3">
-                <label for="graduationYear" class="text-secondary">Graduation Year</label>
-                <input type="number" class="form-control" id="graduationYear" name="graduationYear" placeholder="2025"
-                formControlName="graduationYear">
+            <div class="mb-3">
+              <span class="no-edit-label text-uppercase">Graduation Year</span> <br>
+              <span> {{ this.chatkitUser.customData.graduationYear }}</span>
             </div>
-          </div>
-        </div>
 
-          <!--Interests-->
-          <div class="form-group mb-3">
-            <label for="major" class="text-secondary">Interests</label>
-            <input type="text" class="form-control" id="interests" name="interests" placeholder="What are your interests?" maxlength="100"
-            formControlName="interests">
-          </div>
+            <!--Interests-->
+            <div class="mb-3">
+              <span class="no-edit-label text-uppercase">Interests</span> <br>
+              <span> {{ this.chatkitUser.customData.interests }}</span>
+            </div>
 
-          <!--Clubs-->
-          <div class="form-group mb-3">
-            <label for="clubs" class="text-secondary">Clubs</label>
-            <input type="text" class="form-control" id="clubs" name="clubs" placeholder="Which clubs are you involved in?" maxlength="100"
-            formControlName="clubs">
-          </div>
-     
-          <button *ngIf="editMode" [disabled]="loading" type="submit" class="btn btn-secondary btn-block mt-4 mb-3 py-3">UPDATE PROFILE</button>
-          <div class="text-center">
-              <img *ngIf="loading"
-              src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />  
-          </div>
+            <!--Clubs-->
+            <div class="mb-3">
+              <span class="no-edit-label text-uppercase">Clubs</span> <br>
+              <span> {{ this.chatkitUser.customData.clubs }}</span>
+            </div>
 
-        </form>
+          </div>
+        </ng-container>
       </div>
     </div>
-  </div>
 </div>

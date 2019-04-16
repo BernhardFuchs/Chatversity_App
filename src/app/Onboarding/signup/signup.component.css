@@ -49,6 +49,10 @@
   opacity: 1; 
 }
 
+input[readonly] {
+  background-color: white;
+}
+
 @media (min-width: 576px){ /*Small*/
   .signup-text{
     padding-top: 30%;

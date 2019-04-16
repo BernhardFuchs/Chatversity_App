@@ -7,14 +7,16 @@
     <a class="nav-link mt-1 mb-1 pt-3 pb-3" ngbTooltip="Rooms" placement="right" triggers="hover" [autoClose]="true" routerLinkActive="active" routerLink="rooms"><i class="fa fa-door-closed fa-lg"></i></a>
   </li>
   <li class="nav-item">
-    <a class="nav-link mt-1 mb-1 pt-3 pb-3" ngbTooltip="Messages" placement="right" triggers="hover" [autoClose]="true" routerLinkActive="active" routerLink="messages"><i class="far fa-envelope fa-lg"></i></a>
+    <a class="nav-link mt-1 mb-1 pt-3 pb-3" ngbTooltip="Messages" placement="right" triggers="hover" [autoClose]="true" routerLink="rooms"><i class="far fa-envelope fa-lg"></i></a>
   </li>
   <li class="nav-item">
     <a class="nav-link mt-1 mb-1 pt-3 pb-3" ngbTooltip="Settings" placement="right" triggers="hover" [autoClose]="true" routerLinkActive="active" routerLink="settings"><i class="fa fa-cogs fa-lg"></i></a>
   </li>
   <li class="nav-item">
-    <a class="nav-link mt-1 mb-1 pt-3 pb-3" routerLink="messages">
-      <span>{{ notificationCount }}</span>
+    <a class="nav-link mt-1 mb-1 pt-3 pb-3" routerLink="rooms">
+      <ng-container *ngIf="incomingMessages">
+          <span *ngIf="incomingMessages" class="badge badge-info">{{ incomingMessages }}</span>
+      </ng-container>
     </a>
   </li>
 </ul>

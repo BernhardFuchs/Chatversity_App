@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { User } from '../../Core/_models/user';
 import { UserProfile } from '../../Core/_models/profile';
 
@@ -9,24 +9,31 @@ import { UserProfile } from '../../Core/_models/profile';
 })
 export class SmallComponent implements OnInit {
 
-  user: User;
-  profile: UserProfile;
+  bio: string;
+  graduationYear: string;
+
+  @Input() user: any;
+  @Input() isConnection = false;
 
   constructor() { }
 
   ngOnInit() {
 
-    this.user = {
-      id: 2,
-      firstName: 'Scott',
-      lastName: 'Peterson',
-      username: 'peter610@mail.nmc.edu',
-      password: undefined,
-      university: { id: 3, name: 'NMC', state:'MI', domains:null },
-      profile: { bio: "Hello world!", major: "CIS", graduationYear:2021, interests:"Shooting, Riding, and The Outdoors", clubs:""},
+    try {
+      this.bio = this.user.customData.bio;
+    } catch (error) {
+      this.bio = '';
     }
 
-    this.profile = this.user.profile;
+    try {
+      this.graduationYear = this.user.customData.graduationYear;
+    } catch (error) {
+      this.graduationYear = '';
+    }
+  }
+
+  addConnection() {
+    this.isConnection = true;
   }
 
 }

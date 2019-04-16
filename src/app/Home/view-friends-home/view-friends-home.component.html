@@ -1,3 +1,134 @@
-<p>
-  view-friends-home works!
-</p>
+<div class="container-fluid mt-4">
+
+  <app-small id="profileModal" *ngIf="connection" [user]="connection" [isConnection]="isConnection"></app-small>
+
+  <div class="row">
+    <div class="col">
+  <!-- Actions -->
+  <ul class="nav nav-pills" id="pills-connection-actions-tab" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link" href="#" data-toggle="modal" data-target="#addConnectionModal">Add Connection</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link active" href="#pills-all-connections" id="pills-all-connections-tab" data-toggle="pill" role="tab" aria-controls="pills-all-connections" aria-selected="true">All</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="#pills-online-connections" id="pills-online-connections-tab" data-toggle="pill"  role="tab" aria-controls="pills-online-connections" aria-selected="false">Online</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="#pills-pending-connections" id="pills-pending-connections-tab" data-toggle="pill"  role="tab" aria-controls="pills-pending-connections" aria-selected="false">Pending</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="#pills-search-connections" id="pills-search-connections-tab" data-toggle="pill"  role="tab" aria-controls="pills-search-connections" aria-selected="false">Search</a>
+    </li>
+  </ul>
+  <div class="tab-content" id="pills-connection-actions-tabContent">
+    <!-- All connections -->
+    <div class="tab-pane fade show active" id="pills-all-connections" role="tabpanel" aria-labelledby="pills-all-connections">
+      <div class="my-5">
+        <span class="sr-only">All Connections</span>
+        <ng-container *ngIf="connections">
+          <div *ngFor="let c of connections" class="my-2 user-card">
+              <button class="btn btn-block text-left px-3 py-2" data-toggle="modal" data-target="#profileModal"
+              (click)="connection = c">
+                  <img src="..." onerror="this.src='../../assets/images/DefaultProfile.png'"
+                  class="circle img-fluid rounded-circle card-img" [ngClass]="{ 'border-online': c.active }"/> 
+      
+                  <span class="text-secondary font-weight-bold ml-3">
+                    {{ c.name }}
+                    <small style="font-size:12px; color:#96b7c9;">{{ appUser.presenceStore[c.id] }}</small>
+                  </span>
+              </button>
+            </div>
+        </ng-container>
+      </div>
+    </div>
+    <!-- End All connections -->
+    <!--Online connections-->
+    <div class="tab-pane fade" id="pills-online-connections" role="tabpanel" aria-labelledby="pills-online-connections">
+      <div class="my-5">
+        <span class="sr-only">Online Connections</span>
+        <div *ngFor="let c of connections" class="my-2 user-card">
+          <button class="btn btn-block text-left px-3 py-2" data-toggle="modal" data-target="#profileModal"
+          (click)="connection = c">
+              <img src="..." onerror="this.src='../../assets/images/DefaultProfile.png'"
+              class="circle img-fluid rounded-circle card-img" [ngClass]="{ 'border-online': c.active }"/> 
+              <span class="text-secondary font-weight-bold ml-3">
+                  {{ c.name }}
+                  <small style="font-size:12px; color:#96b7c9;">{{ appUser.presenceStore[c.id] }}</small>
+                </span>
+          </button>
+        </div>
+      </div>
+    </div>
+    <!-- End online connections -->
+    <div class="tab-pane fade" id="pills-pending-connections" role="tabpanel" aria-labelledby="pills-pending-connections">
+      Pending
+    </div>
+    <div class="tab-pane fade" id="pills-search-connections" role="tabpanel" aria-labelledby="pills-search-connections">
+      <!--Search connections-->
+      <form [formGroup]="searchForm" class="my-4">
+          <!--Search Bar-->
+          <div class="form-group mb-3">
+              <input type="search" required class="form-control primary-border" id="search" name="search" placeholder="Search" 
+              formControlName="search" (input)="onSearch()">
+          </div>
+      </form>
+        <!--Connection search results-->
+  <div class="my-2 search-results" *ngIf="(submitted && !searchForm.invalid)">
+    <div *ngIf="(results.length > 0)">
+        <div *ngFor="let result of results">
+            <button class="btn btn-block text-left px-3 py-2 my-2 user-card" data-toggle="modal" data-target="#profileModal"
+             (click)="setUser(result.id)">
+                <img src="..." onerror="this.src='../../assets/images/DefaultProfile.png'"
+                class="circle img-fluid rounded-circle card-img" [ngClass]="{ 'border-online': result.active }"/> 
+    
+                <span class="text-secondary ml-3">{{ result.firstName }} {{ result.lastName }}</span>
+            </button>
+        </div>
+    </div>
+
+    <img *ngIf="loading" class="ml-2"
+      src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
+
+    <div *ngIf="(results.length == 0)" class="ml-2">
+      <span class="text-light">Sorry, we could not find any results.</span>
+    </div>
+
+    <hr *ngIf="(results.length > 0)">
+  </div>
+  <!-- End connection search results -->
+      <!-- End Search connections -->
+    </div>
+  </div>
+</div>
+  <!-- End Actions -->
+</div> 
+
+
+  <!-- Add connection modal -->
+  <div class="modal fade" id="addConnectionModal" tabindex="-1" role="dialog" aria-labelledby="addConnectionModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="addConnectionModalLabel">Add connection</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form (ngSubmit)="addConnection()">
+            <div class="form-group">
+                <input type="text" class="form-control" [formControl]="connectionToAdd" id="name" required aria-describedby="addConnectionHelpBlock">
+                <small id="addConnectionHelpBlock" class="form-text text-muted">
+                    Enter the email of the connection you wish to add:
+                </small>
+            </div>
+          <button type="submit" class="btn btn-primary">Send</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- End connection modal -->
+</div>

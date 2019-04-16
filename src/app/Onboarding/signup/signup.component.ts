@@ -42,7 +42,9 @@ export class SignupComponent implements OnInit {
   returnUrl: string;
   universities: University[];
   searchingForSchool = false;
+  wrongUniversity = false;
   formValidation: CustomFormValidation = new CustomFormValidation();
+  guessUniversity: string;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -56,12 +58,12 @@ export class SignupComponent implements OnInit {
     this.signupForm = this.formBuilder.group({
       firstname: ['', Validators.required],
       lastname: ['', Validators.required],
-      university: ['', Validators.required],
+      university: [this.guessUniversity, Validators.required],
       username: ['', Validators.compose([
         Validators.required, Validators.email, Validators.pattern(this.formValidation.eduEmailValidation)
       ])],
       password: ['', Validators.compose([
-        Validators.required, Validators.minLength(6), Validators.pattern(this.formValidation.passwordValidation)
+        Validators.required, Validators.minLength(8), Validators.pattern(this.formValidation.passwordValidation)
       ])]
     });
 
@@ -84,11 +86,21 @@ export class SignupComponent implements OnInit {
   get f() { return this.signupForm.controls; }
 
   //
-  // ─── CHECK FOR VALID UNIVERSITY ─────────────────────────────────────────────────
+  // ─── VALIDATE UNIVERSITY WITH JSON STORE ──────────────────────────────────────
   //
-  checkUniversity(_id: number): boolean {
-    console.log('University Id:' + _id);
-    return (this.universities.find(x => x.id.toString() === _id.toString())) ? true : false;
+  validateUniversity(query: string) {
+    this.searchingForSchool = true;
+    console.log(query);
+    return this.http.get(`${environment.apiUrl}/university/name/${query}`)
+    .toPromise()
+    .then(university => {
+      console.log(university);
+      return university;
+    })
+    .catch(error => {
+      this.searchingForSchool = false;
+      return null;
+    });
   }
 
   //
@@ -96,17 +108,47 @@ export class SignupComponent implements OnInit {
   //
   findUniversity(query: string) {
     this.searchingForSchool = true;
-    console.log(query);
+    // console.log(query);
 
-    this.http.get(`${environment.apiUrl}/university/${query}`)
+    return this.http.get(`${environment.apiUrl}/university/${query}`)
     .toPromise()
     .then(university => {
-      console.log(university);
+      // console.log(university);
+      return university;
     })
     .catch(error => {
       this.searchingForSchool = false;
+      return null;
     });
   }
+
+  //
+  // ─── GET UNIVERSITY BY DOMAIN ──────────────────────────────────────
+  //
+  async getUniversity(query: string) {
+    let data = new Object();
+    data = await this.findUniversity(query);
+
+    if (data) {
+      this.guessUniversity = data['name'];
+      this.signupForm.get('university').setValue(this.guessUniversity);
+    }
+  }
+
+  //
+  // ─── UPDATE UNIVERSITY IF USER CHANGES INPUT ──────────────────────────────────────
+  //
+  userUpdateUniversity(newUniversity: string) {
+    this.guessUniversity = newUniversity;
+
+    this.validateUniversity(this.guessUniversity)
+    .then(result => {
+      if (!result) {
+        this.f.university.setErrors({'invalid': true});
+      }
+    });
+  }
+
 
   //
   // ─── HANDLE SIGN UP ─────────────────────────────────────────────────────────────
@@ -121,27 +163,25 @@ export class SignupComponent implements OnInit {
       return;
     }
 
-    // Stop if invalid university
-    if (!(this.checkUniversity(this.signupForm.get('university').value))) {
-      console.log('Invalid University.');
-      this.f.university.setErrors({'invalid': true});
-      this.loading = false;
-      return;
-    }
-
     // Create obj to hold formdata
     const formData: FormData = new FormData();
 
     // Append input to form data
     formData.append('firstname', this.signupForm.get('firstname').value);
     formData.append('lastname', this.signupForm.get('lastname').value);
-    formData.append('university', this.signupForm.get('university').value);
+    formData.append('university', this.guessUniversity);
     formData.append('username', this.signupForm.get('username').value);
     formData.append('password', this.signupForm.get('password').value);
 
-    this.auth.signup(this.f.firstname.value, this.f.lastname.value, this.f.university.value, this.f.username.value, this.f.password.value);
-
-    this.loading = false;
+    this.auth.signup(this.f.firstname.value, this.f.lastname.value, this.guessUniversity, this.f.username.value, this.f.password.value)
+    .then(data => {
+      this.router.navigate([this.returnUrl]);
+    },
+    error => {
+      this.loading = false;
+      // this.f.username.setErrors({invalid: true});
+      console.log(error)
+    });
   }
 }
 

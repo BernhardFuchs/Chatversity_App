@@ -1,4 +1,4 @@
-export class UserProfile{
+export class UserProfile {
     bio: string;
     major: string;
     graduationYear: number;

@@ -1,16 +1,25 @@
-<div class="container-fluid" style="width:100%; min-height: 100vh; background-color: white;">
-  <div class="row">
-    <div class="col-12 col-lg-3">
-      <button (click)="showHomeView()">Home</button>
-      <button (click)="showFriendsView()">Friends</button>
-      <button (click)="showProfileView()">Profile</button>
-    </div>
-    <div class="col-12 col-lg-9">
-      <div *ngIf="FriendsView.current">
-        <app-view-friends-home></app-view-friends-home>
+<div class="container-fluid" style="height:100vh;">
+
+  <app-top-bar [viewName]="'Home'" [headerText]="headerText"></app-top-bar>
+
+  <div class="row page-content">
+    <div class="col-12 col-lg-3" style="background-color:#F1F8FC; border-bottom:1px solid #DAE6ED;">
+      <div class="my-3 px-1">
+        <button class="btn btn-block custom-btn text-left mr-4 my-2 p-3" (click)="showHomeView()"
+        [ngClass]="{ 'active': HomeView.current }">Latest News</button>
+        <button class="btn btn-block custom-btn text-left my-2 p-3" (click)="showFriendsView()"
+        [ngClass]="{ 'active': FriendsView.current }">Connections</button>
+        <button class="btn btn-block custom-btn text-left my-2 p-3" (click)="showProfileView()"
+        [ngClass]="{ 'active': ProfileView.current }">My Profile</button>
       </div>
+    </div>
+
+    <div class="col-12 col-lg-9" style="background-color: #fafdff; border-left:1px solid #DAE6ED;">
       <div *ngIf="HomeView.current">
         <app-view-latest-news></app-view-latest-news>
+      </div>
+      <div *ngIf="FriendsView.current">
+        <app-view-friends-home></app-view-friends-home>
       </div>
       <div *ngIf="ProfileView.current">
         <app-profile></app-profile>

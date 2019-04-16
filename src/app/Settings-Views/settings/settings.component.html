@@ -1,35 +1,37 @@
-<div class="container-fluid">
-  <div class="row shadow-sm align-items-center py-2" id="settings_header">
-    <div class="col-4" id="settings-left">
-        <div class="d-flex align-items-center">
-          <span class="text-uppercase">Settings</span>
-        </div>
-    </div>
-  </div>
-<div class="row" style="height: calc(100vh - 44px); background:#C3D3DC;">
-  <div class="col-4 h-100 overflow-auto">
-    <span style="color: #115073;" id="user_settings">User Settings</span>
-      <!-- Nav tabs -->
-          <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-            <a class="nav-link active" id="v-pills-MyProfile-tab" data-toggle="pill" href="#v-pills-MyProfile" role="tab" aria-controls="v-pills-MyProfile" aria-selected="true">My Profile</a>
-            <a class="nav-link" id="v-pills-Privacy-tab" data-toggle="pill" href="#v-pills-Privacy" role="tab" aria-controls="v-pills-Privacy" aria-selected="false">Privacy</a>
-            <a class="nav-link" id="v-pills-security-tab" data-toggle="pill" href="#v-pills-security" role="tab" aria-controls="v-pills-security" aria-selected="false">Security</a>
-            <a class="nav-link" id="v-pills-Connections-tab" data-toggle="pill" href="#v-pills-Connections" role="tab" aria-controls="v-pills-Connections" aria-selected="false">Connections</a>
-          </div>
-  </div>
-<div class="col-8 h-100 overflow-auto" style="background:#FAFDFF;">
-  <div class="chat-window h-100 overflow-auto">
-    <div id="settings-right">
-      <div class="col-12">
-          <div class="tab-content text-black" id="v-pills-tabContent">
-          <!-- Tab panes -->
-          <div class="tab-pane fade show active" id="v-pills-MyProfile" role="tabpanel" aria-labelledby="v-pills-MyProfile-tab">My Profile</div>
-          <div class="tab-pane fade" id="v-pills-Privacy" role="tabpanel" aria-labelledby="v-pills-Privacy-tab">Privacy</div>
-          <div class="tab-pane fade" id="v-pills-security" role="tabpanel" aria-labelledby="v-pills-security-tab">Security</div>
-          <div class="tab-pane fade" id="v-pills-Connections" role="tabpanel" aria-labelledby="v-pills-Connections-tab">Connections</div>
-        </div>
+<div class="container-fluid" style="height:100vh;">
+
+  <app-top-bar [viewName]="'Settings'" [headerText]="headerText"></app-top-bar>
+  
+  <div class="row page-content">
+    <div class="col-12 col-lg-3" style="background-color:#F1F8FC; border-bottom:1px solid #DAE6ED;">
+      <div class="my-3 px-1">
+        <button class="btn btn-block custom-btn text-left my-2 p-3" (click)="showProfileView()"
+        [ngClass]="{ 'active': ProfileView.current }">My Profile</button>
+        <button class="btn btn-block custom-btn text-left my-2 p-3" (click)="showPrivacyView()"
+        [ngClass]="{ 'active': PrivacyView.current }">Privacy</button>
+        <button class="btn btn-block custom-btn text-left my-2 p-3" (click)="showSecurityView()"
+        [ngClass]="{ 'active': SecurityView.current }">Security</button>
+        <button class="btn btn-block custom-btn text-left my-2 p-3" (click)="showConnectionsView()"
+        [ngClass]="{ 'active': ConnectionsView.current }">Connections</button>
+        <button class="btn btn-block custom-btn text-left my-2 p-3 user-action-btn" (click)="logOut()">Logout <i class="fa fa-sign-out-alt"></i></button>
       </div>
     </div>
+  
+  <div class="col-12 col-lg-9" style="background-color: #fafdff; border-left:1px solid #DAE6ED;">
+    <div *ngIf="ProfileView.current">
+      <app-settings-profile></app-settings-profile>
+    </div>
+    <div *ngIf="PrivacyView.current">
+      <app-privacy-settings></app-privacy-settings>
+    </div>
+    <div *ngIf="SecurityView.current">
+      <app-security-settings></app-security-settings>
+    </div>
+    <div *ngIf="ConnectionsView.current">
+      <app-connection-settings></app-connection-settings>
+    </div>
+  </div>
+
   </div>
 </div>
       

@@ -1,0 +1,29 @@
+#messages_header {
+    background-color:#FFF;
+    z-index: 2;
+    font-family: 'Poppins', sans-serif;
+    font-weight: bold;
+    color: #94B0C0;
+    top:0;
+    position: sticky;
+}
+
+#header-text{
+    display: none;
+}
+#mobile-header-text{
+    display: inline-block;
+}
+
+@media (min-width: 768px){ /*Medium*/
+    #header-text{
+        display: inline-block;
+    }
+    #mobile-header-text{
+        display: none;
+    }
+}
+#logoutLink:hover{
+    text-decoration: underline;
+    cursor: pointer;
+}

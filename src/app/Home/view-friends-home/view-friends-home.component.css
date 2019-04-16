@@ -1,0 +1,19 @@
+.user-card{
+    background-color: white;
+    border: 1px solid #DAE6ED;
+    border-radius: 5px;
+}
+.user-card:hover{
+    background-color: transparent;
+}
+.card-img{
+    max-width: 40px;
+    border-width: 2px !important;
+    border: 2px solid #96B7C9;
+}
+.border-online{
+    border: 2px solid #00e600;
+}
+#search{
+    border-radius: 20px;
+}
