@@ -49,7 +49,6 @@ export class SignupComponent implements OnInit {
 
   constructor(
     private formBuilder: FormBuilder,
-    private route: ActivatedRoute,
     private router: Router,
     private auth: AuthService,
     private http: HttpClient) { }
@@ -91,11 +90,9 @@ export class SignupComponent implements OnInit {
   //
   validateUniversity(query: string) {
     this.searchingForSchool = true;
-    console.log(query);
     return this.http.get(`${environment.apiUrl}/university/name/${query}`)
     .toPromise()
     .then(university => {
-      console.log(university);
       return university;
     })
     .catch(error => {
@@ -109,12 +106,9 @@ export class SignupComponent implements OnInit {
   //
   findUniversity(query: string) {
     this.searchingForSchool = true;
-    // console.log(query);
-
     return this.http.get(`${environment.apiUrl}/university/${query}`)
     .toPromise()
     .then(university => {
-      // console.log(university);
       return university;
     })
     .catch(error => {
@@ -150,7 +144,6 @@ export class SignupComponent implements OnInit {
     });
   }
 
-
   //
   // ─── HANDLE SIGN UP ─────────────────────────────────────────────────────────────
   //
@@ -179,9 +172,8 @@ export class SignupComponent implements OnInit {
       this.router.navigate([this.returnUrl]);
     },
     error => {
+      console.log('SIGN UP ERROR:', error);
       this.loading = false;
-      // this.f.username.setErrors({invalid: true});
-      console.log(error)
     });
   }
 }

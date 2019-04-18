@@ -129,7 +129,7 @@ app.get("/university/:query", (req,res) => {
 //  });
   // TODO: Search JSON file and return university if query matched
 
-  console.log(req.params.query);
+  // console.log(req.params.query);
 });
 
 // ────────────────────────────────────────────────────────────────────────────────
@@ -150,7 +150,7 @@ app.get("/university/name/:query", (req,res) => {
 
   res.status(200).json(found);
 
-  console.log(req.params.query);
+  // console.log(req.params.query);
 });
 
 // ────────────────────────────────────────────────────────────────────────────────

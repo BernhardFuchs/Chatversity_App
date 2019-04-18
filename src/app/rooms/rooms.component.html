@@ -1,10 +1,10 @@
 <div class="container-fluid" style="height:100vh;">
 
-  <ng-container *ngIf="current_room">
+  <ng-container *ngIf="current_room.name">
     <app-top-bar [viewName]="'Rooms'" [headerText]="current_room.name"></app-top-bar>
   </ng-container>
 
-  <ng-container *ngIf="!current_room">
+  <ng-container *ngIf="!current_room.name">
     <app-top-bar [viewName]="'Rooms'" [headerText]="'Chat'"></app-top-bar>
   </ng-container>
 
@@ -53,10 +53,11 @@
                     <div class="row" id="chatReel">
                         <!-- Messages -->
                         <div class="col-12">
-                            <span role="button" tabindex="0" class="chat-user-link text-secondary font-weight-bold" (click)="setSelectedRoomMember(current_room.userStore.users[message.senderId])" data-toggle="modal" data-target="#profileModal">
+                            <span role="button" tabindex="0" class="chat-user-link text-secondary" (click)="setSelectedRoomMember(current_room.userStore.users[message.senderId])" data-toggle="modal" data-target="#profileModal"
+                            [ngClass]="{ 'text-secondary-light': (current_room.userStore.users[message.senderId].id == chatkitUser.id)}" style="font-weight:500">
                                 {{ current_room.userStore.users[message.senderId].name }}
                             </span>
-                          <small class="text-muted" style="font-size:12px;">{{ message.createdAt | date:'shortTime' }}</small>
+                          <small class="text-muted pl-1" style="font-size:12px;">{{ message.createdAt | date:'shortTime' }}</small>
                           <p style="color:#626e7a; font-size:15px;">{{ message.parts[0].payload.content }}</p>
                           <hr>
                         </div>
@@ -70,7 +71,7 @@
       <div class="chat-footer" style="position: absolute; bottom: 0; left: 0; width: 100%;">
         <!--TODO: Change placeholder to only display room name if room name is defined-->
         <form (ngSubmit)='sendMessage()'>
-          <input [placeholder]="(current_room) ? 'Message ' + current_room.name : 'Message'" type="text" name="message" [(ngModel)]="message">
+          <input [placeholder]="(current_room.name) ? 'Message ' + current_room.name : 'Message'" type="text" name="message" [(ngModel)]="message">
         </form>
       </div>
     </div>

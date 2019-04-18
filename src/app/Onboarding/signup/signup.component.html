@@ -44,7 +44,7 @@
               <div class="form-group mb-3">
                 <label for="firstname" class="text-secondary">First Name <span class="text-danger">*</span></label>
                 <input type="text" required class="form-control primary-border" id="firstname" name="firstname" placeholder="John" 
-                formControlName="firstname"
+                formControlName="firstname" maxlength="30"
                 [ngClass]="{ 'is-invalid': submitted && f.firstname.errors, 'danger-border': submitted && f.firstname.errors }">
 
                 <div *ngIf="submitted && f.firstname.errors" class="invalid-feedback">
@@ -58,7 +58,7 @@
                 <div class="form-group mb-3">
                   <label for="lastname" class="text-secondary">Last Name <span class="text-danger">*</span></label>
                   <input type="text" required class="form-control primary-border" id="lastname" name="lastname" placeholder="Doe" 
-                  formControlName="lastname"
+                  formControlName="lastname" maxlength="30"
                   [ngClass]="{ 'is-invalid': submitted && f.lastname.errors, 'danger-border': submitted && f.lastname.errors }">
 
                 <div *ngIf="submitted && f.lastname.errors" class="invalid-feedback">
@@ -113,8 +113,9 @@
                 </div>
 
                 <button [disabled]="loading" class="btn btn-login btn-primary btn-block mt-4 py-3"><span *ngIf="!loading">SIGN UP FOR CHATVERSITY</span>
-                  <img *ngIf="loading"
-                    src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
+                  <div *ngIf="loading" class="spinner-border text-whiet" role="status">
+                    <span class="sr-only">Loading...</span>
+                  </div>
                 </button>
 
             </div>

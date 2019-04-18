@@ -6,7 +6,6 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { AppComponent } from '../app.component';
 import { AuthService } from '../Core/_services/auth.service';
 
-
 @Component({
   selector: 'app-rooms',
   templateUrl: './rooms.component.html',
@@ -67,23 +66,18 @@ export class RoomsComponent implements OnInit, AfterViewInit {
     })
   });
 
-
-
-
-
   //
   // ─── CONSTRUCTOR ────────────────────────────────────────────────────────────────
   //
-
     constructor(private http: HttpClient, private msgService: MessagingService, private _auth: AuthService) {
 
       this.subscription = this._auth.chatkitUser$.subscribe(
         (user) => {
-          if(user){
+          if (user) {
             this.chatkitUser = user;
-            console.log(this.chatkitUser);
+            // console.log(this.chatkitUser);
             this.rooms = user.rooms;
-            console.log(this.rooms);
+            // console.log(this.rooms);
           }
         }
       );
@@ -97,12 +91,11 @@ export class RoomsComponent implements OnInit, AfterViewInit {
       this.current_room = this._auth.currentRoom$.subscribe(
         (currentRoom) => {
           this.current_room = currentRoom;
-          console.log(currentRoom);
+          // console.log(currentRoom);
         }
       );
     }
   // ────────────────────────────────────────────────────────────────────────────────
-
 
   onFileChange(event) {
 
@@ -119,7 +112,6 @@ export class RoomsComponent implements OnInit, AfterViewInit {
     // };
   }
 
-
   //
   // ─── VIEW A USER IN THE ROOM ────────────────────────────────────────────────────
   //
@@ -133,7 +125,6 @@ export class RoomsComponent implements OnInit, AfterViewInit {
   //
   // ─── SEND A MESSAGE ─────────────────────────────────────────────────────────────
   //
-
     sendMessage() {
       const { message, currentUser } = this;
       this.chatkitUser.sendMessage({
@@ -146,14 +137,11 @@ export class RoomsComponent implements OnInit, AfterViewInit {
     }
   // ─────────────────────────────────────────────────────────────────
 
-
-
   // Join a room
   joinRoom(roomID) {
     this.chatkitUser.joinRoom({roomId: roomID}).then(room => {
       this.current_room = room;
       console.log(this.current_room);
-
 
       // After joining room, fetch messages
       this.chatkitUser.fetchMultipartMessages({roomId: roomID}).then(messages => {
@@ -185,7 +173,6 @@ export class RoomsComponent implements OnInit, AfterViewInit {
   }
   // end Join room
 
-
   // Function => check if user has unread messages in a room
   hasUnread(roomID) {
 
@@ -196,21 +183,21 @@ export class RoomsComponent implements OnInit, AfterViewInit {
       roomId: roomID
     });
 
-      // if read cursor ID !== latest message ID...
-      this.chatkitUser.fetchMultipartMessages({ // Get latest message
-        roomId: roomID,
-        limit: 1,
-      })
-      .then(messages => {
-        if (cursor) { // Has cursor so check cursor pos vs latest message id
-          hasUnread = (cursor.position !== messages[0].initialId) ? true : false;
-        } else {
-          // No cursor => set
-        }
-      })
-      .catch(err => {
-        console.log(`Error fetching messages: ${err}`);
-      });
+    // if read cursor ID !== latest message ID...
+    this.chatkitUser.fetchMultipartMessages({ // Get latest message
+      roomId: roomID,
+      limit: 1,
+    })
+    .then(messages => {
+      if (cursor) { // Has cursor so check cursor pos vs latest message id
+        hasUnread = (cursor.position !== messages[0].initialId) ? true : false;
+      } else {
+        // No cursor => set
+      }
+    })
+    .catch(err => {
+      console.log(`Error fetching messages: ${err}`);
+    });
 
     return hasUnread;
   }
@@ -354,12 +341,12 @@ export class RoomsComponent implements OnInit, AfterViewInit {
     // setInterval(this.logtheheight, 3000);
     // console.log(this.chatReel);
     this.chatReel.changes.subscribe(c => { c.toArray().forEach(item => {
-      console.log(item);
-      console.log(item.nativeElement);
-      console.log(item.nativeElement.scrollHeight);
+      // console.log(item);
+      // console.log(item.nativeElement);
+      // console.log(item.nativeElement.scrollHeight);
 
-      console.log('Scroll Height: ' + item.nativeElement.offsetParent.scrollHeight);
-      console.log('Scroll Top: ' + item.nativeElement.offsetParent.scrollTop);
+      // console.log('Scroll Height: ' + item.nativeElement.offsetParent.scrollHeight);
+      // console.log('Scroll Top: ' + item.nativeElement.offsetParent.scrollTop);
 
       item.nativeElement.offsetParent.scrollTop = item.nativeElement.offsetParent.scrollHeight;
       // item.nativeElement.scrollTop = item.nativeElement.offsetTop;

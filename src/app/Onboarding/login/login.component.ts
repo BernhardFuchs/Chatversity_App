@@ -25,11 +25,8 @@ export class LoginComponent implements OnInit {
   returnUrl: string;
   formValidation: CustomFormValidation = new CustomFormValidation();
 
-  // username = new FormControl('');
-
   constructor (
     private formBuilder: FormBuilder,
-    private route: ActivatedRoute,
     private router: Router,
     private auth: AuthService
   ) {  this.returnUrl = '/'; }
@@ -46,22 +43,17 @@ export class LoginComponent implements OnInit {
   });
   }
 
-
-
   // convenience getter for easy access to form fields
   get f() { return this.loginForm.controls; }
-
-
 
   //
   // ─── HANDLE LOGIN FORM ──────────────────────────────────────────────────────────
   //
-
     onSubmit() {
       this.submitted = true;
       this.loading = true;
 
-      // stop here if form is invalid
+      // Stop here if form is invalid
       if (this.loginForm.invalid) {
         this.loading = false;
         return;
@@ -69,19 +61,17 @@ export class LoginComponent implements OnInit {
 
       // Create obj to hold formdata
       const formData: FormData = new FormData();
+
       // Append username and password to form data
       formData.append('username', this.loginForm.get('username').value);
       formData.append('password', this.loginForm.get('password').value);
-
-      console.log(formData);
-
 
       this.auth.login(this.f.username.value, this.f.password.value).then(user => {
         console.log(`Logged in as ${user._embedded.user.profile.firstName}`);
         this.router.navigate([this.returnUrl]);
       },
       error => {
-        console.log(error);
+        console.log('LOGIN ERROR:', error);
         this.loading = false;
         this.f.username.setErrors({invalid: true});
       });

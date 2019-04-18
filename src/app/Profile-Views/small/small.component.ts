@@ -1,6 +1,4 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { User } from '../../Core/_models/user';
-import { UserProfile } from '../../Core/_models/profile';
 
 @Component({
   selector: 'app-small',
@@ -19,19 +17,9 @@ export class SmallComponent implements OnInit {
 
   ngOnInit() {
 
-    try {
-      this.bio = this.user.customData.bio;
-    } catch (error) {
-      this.bio = '';
-    }
-
-    try {
-      this.graduationYear = this.user.customData.graduationYear;
-    } catch (error) {
-      this.graduationYear = '';
-    }
   }
 
+  // TODO: Implement actual add connection functionality
   addConnection() {
     this.isConnection = true;
   }

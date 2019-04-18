@@ -1,15 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
 import { NgForm, FormGroup, FormBuilder, Validators, FormControl, MaxLengthValidator } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
-import { User } from '../../Core/_models/user';
-import { UserProfile } from '../../Core/_models/profile';
 import { AuthService } from '../../Core/_services/auth.service';
-import { MessagingService } from '../../Core/_services/messaging.service';
-import { environment } from '../../../environments/environment.prod';
 import { UserService } from '../../Core/_services/user.service';
 
 @Component({
@@ -18,15 +9,14 @@ import { UserService } from '../../Core/_services/user.service';
   styleUrls: ['./settings-profile.component.scss']
 })
 export class SettingsProfileComponent implements OnInit {
-  profileForm: FormGroup;
   loading = false;
   submitted = false;
-  editMode = false;
+  editingForm = false;
+
+  profileForm: FormGroup;
   user: any;
-  profile: UserProfile;
   subscription: any;
   chatkitUser: any;
-  editingForm = false;
 
   name = '';
   bio = '';
@@ -37,47 +27,26 @@ export class SettingsProfileComponent implements OnInit {
 
   constructor(
     private formBuilder: FormBuilder,
-    private route: ActivatedRoute,
-    private router: Router,
     private _auth: AuthService,
-    private msgService: MessagingService,
-    private http: HttpClient,
     private userService: UserService) {
-
       this._auth.chatkitUser$.subscribe(
         (user) => {
           this.chatkitUser = user;
-          console.log(this.chatkitUser);
+          console.log('CHATKIT USER:', this.chatkitUser);
           this.initForm();
         }
       );
-
     }
 
   // Convenience getter for easy access to form fields
   get f() { return this.profileForm.controls; }
 
-  onSaveClick(){
-    if(this.profileForm){
-      if(this.profileForm.invalid){
-        this.submitted = true;
-        return;
-      }
-    }
-
-    this.submitted = false;
-    this.editingForm = !this.editingForm;
-  }
-
-
   // Validation and other actions upon form submission
   onSubmit() {
-    console.log('form submitted');
-
     this.submitted = true;
     this.loading = true;
 
-    // stop here if form is invalid
+    // Stop here if form is invalid
     if (this.profileForm.invalid) {
       this.loading = false;
       console.log('ERROR: Form invalid');
@@ -94,9 +63,7 @@ export class SettingsProfileComponent implements OnInit {
 
     // Get current user custom data
     const currentUserData = this.chatkitUser.customData;
-    console.log('Current user data: ');
-    console.log(currentUserData);
-
+    console.log('CHATKIT USER CUSTOM DATA: ', currentUserData);
 
     // Add update data
     currentUserData['name'] = _name;
@@ -111,8 +78,8 @@ export class SettingsProfileComponent implements OnInit {
     .toPromise()
     .then((data) => {
 
-      console.log(data);
-      console.log(this.chatkitUser);
+      console.log('RESPONSE:', data);
+      console.log('UPDATED CHATKIT USER:', this.chatkitUser);
 
       this.setUserProfile(data);
 
@@ -121,6 +88,7 @@ export class SettingsProfileComponent implements OnInit {
     });
   }
 
+  // Build profile form
   initForm() {
     this.getUserProfile();
 
@@ -141,6 +109,7 @@ export class SettingsProfileComponent implements OnInit {
     });
   }
 
+  // Set updated profile data
   setUserProfile(userData) {
     this.chatkitUser.customData.avatarURL = userData.avatar_url;
     this.chatkitUser.customData.customData = userData.custom_data;
@@ -148,6 +117,7 @@ export class SettingsProfileComponent implements OnInit {
     this.chatkitUser.updatedAt = userData.updated_at;
   }
 
+  // Bring in chatkit user data
   getUserProfile() {
     try {
       this.name = this.chatkitUser.name;
@@ -185,7 +155,6 @@ export class SettingsProfileComponent implements OnInit {
       this.clubs = '';
     }
   }
-
 
   ngOnInit() {
   }

@@ -11,7 +11,6 @@ const client = new okta.Client({
 // declare axios for making http requests
 const axios = require('axios');
 
-
 /* GET user listing. */
 router.get('/', (req, res) => {
     res.send('Okta server route works');
@@ -52,8 +51,7 @@ router.get('/', (req, res) => {
 
   // TODO: Update to dynamically pull url from config
   router.post('/login', (req, res) => {
-      console.log("request: ");
-      console.log(req);
+      console.log('REQUEST:', req);
       axios.post(`https://dev-117825.okta.com/api/v1/authn`, {
           "username": req.body.username,
           "password": req.body.password,
@@ -104,43 +102,12 @@ router.get('/', (req, res) => {
     client.createUser(newUser)
     .then(user => {
       res.status(200).json(user)
-      console.log('Created user', user)
+      console.log('CREATED USER', user)
     })
     .catch((err) => {
       console.log(err);
     });
-  })
-
-// TODO: Update to dynamically pull url from config
-//   router.post('/signup', (req, res) => {
-//     console.log(req);
-//     axios.post(`https://dev-117825.okta.com/api/v1/users`, {
-//       "profile": {
-//       "firstName": req.body.fName,
-//       "lastName": req.body.lName,
-//       "email": req.body.username,
-//       "login": req.body.username
-//       },
-//       "credentials": {
-//         "password" : { "value": req.body.password }
-//       }
-//     }, 
-//     {
-//       headers:{
-//         "Accept":'application/json',
-//         "Content-Type": 'application/json'
-//       }
-//     })
-//     .then(user => { 
-//       // TODO: Create and return Session with Session Token 
-//       // TODO: https://developer.okta.com/docs/api/resources/sessions/#create-session-with-session-token
-//         res.status(200).json(user.data);
-//     })
-//     .catch(error => {
-//       res.status(500).send('<p>'+ error +'</p>');
-//     });
-// });
-// ────────────────────────────────────────────────────────────────────────────────
+  });
 
 
 //
@@ -148,8 +115,7 @@ router.get('/', (req, res) => {
 //
 
   router.post('/forgot', (req, res) => { 
-      console.log("request: ");
-      console.log(req);
+      console.log('REQUEST:', req);
       axios.post(`https://dev-117825.okta.com/api/v1/authn`, {
           "username": req.body.username,
           "relayState": "localhost:4200",
@@ -201,7 +167,7 @@ router.get('/users/:id', (req, res) => {
     if (user) { 
       res.status(200).send(user.data);
     }
-    console.log('test');
+    // console.log('test');
   })
   .catch(error => {
     res.status(500).json('<p>'+ error +'</p>');

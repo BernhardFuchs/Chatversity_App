@@ -1,10 +1,12 @@
-<a routerLink="home" id="top-logo"><img src="/assets/icons/icon-72x72.png" height="48" width="42" class="m-3"></a>
+<a [routerLink]='["/home"]' id="top-logo"><img src="/assets/icons/icon-72x72.png" height="48" width="42" class="m-3"></a>
 <ul class="nav nav-pills nav-justified flex-column align-self-center m-auto">
   <li class="nav-item">
     <a class="nav-link mt-1 mb-1 pt-3 pb-3" ngbTooltip="Home" placement="right" triggers="hover" [autoClose]="true" routerLinkActive="active" routerLink="home"><i class="fa fa-home fa-lg"></i></a>
   </li>
   <li class="nav-item">
-    <a class="nav-link mt-1 mb-1 pt-3 pb-3" ngbTooltip="Rooms" placement="right" triggers="hover" [autoClose]="true" routerLinkActive="active" routerLink="rooms"><i class="fa fa-door-closed fa-lg"></i></a>
+    <a class="nav-link mt-1 mb-1 pt-3 pb-3" ngbTooltip="Rooms" placement="right" triggers="hover" [autoClose]="true" routerLinkActive="active" routerLink="rooms"><i class="fa fa-door-closed fa-lg"></i>
+      <span *ngIf="roomsWithNewMessages.length" class="badge badge-info">{{ roomsWithNewMessages.length }}</span>
+    </a>
   </li>
   <li class="nav-item">
     <a class="nav-link mt-1 mb-1 pt-3 pb-3" ngbTooltip="Messages" placement="right" triggers="hover" [autoClose]="true" routerLink="rooms"><i class="far fa-envelope fa-lg"></i></a>
@@ -12,11 +14,11 @@
   <li class="nav-item">
     <a class="nav-link mt-1 mb-1 pt-3 pb-3" ngbTooltip="Settings" placement="right" triggers="hover" [autoClose]="true" routerLinkActive="active" routerLink="settings"><i class="fa fa-cogs fa-lg"></i></a>
   </li>
-  <li class="nav-item">
+  <!--<li class="nav-item">
     <a class="nav-link mt-1 mb-1 pt-3 pb-3" routerLink="rooms">
-      <ng-container *ngIf="incomingMessages">
-          <span *ngIf="incomingMessages" class="badge badge-info">{{ incomingMessages }}</span>
+      <ng-container *ngIf="roomMessages">
+          <span *ngIf="roomMessages" class="badge badge-info">{{ incomingMessages }}</span>
       </ng-container>
     </a>
-  </li>
+  </li>-->
 </ul>

@@ -1,16 +1,6 @@
-<!DOCTYPE html>
-<html>
-
-<head>
-    <!-- import fonts -->
-    <link href="https://fonts.googleapis.com/css?family=Nunito|Poppins|Roboto" rel="stylesheet">
-</head>
-
 <body>
     <div class="container my-4 pt-5 pb-3">
-        <!--  -->
         <!-- Title header -->
-        <!--  -->
         <div class="row">
             <div class="col-12 col-lg-8 offset-lg-2 text-center">
                 <img src="/assets/images/logo-mark-64.png" class="img-fluid img-responsive mx-auto mb-4" width="64px"
@@ -18,9 +8,7 @@
                 <h1 class="text-center h4 text-secondary">Login to Chatversity</h1>
             </div>
         </div>
-        <!--  -->
         <!-- Login Form -->
-        <!--  -->
         <div class="row mt-5">
             <div class="col-12 col-md-8 offset-md-2 col-lg-4 offset-lg-4">
                 <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
@@ -56,23 +44,20 @@
                             <div *ngIf="f.password.errors.required">Password is required.</div>
                         </div>
                         <button [disabled]="loading" class="btn btn-login btn-primary btn-block mt-4 py-3" tabindex=3><span *ngIf="!loading">LOGIN</span>
-                            <img *ngIf="loading"
-                            src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
+                            <div *ngIf="loading" class="spinner-border text-whiet" role="status">
+                                <span class="sr-only">Loading...</span>
+                            </div>
                         </button>
                         
                     </div>
                 </form>
             </div>
-            <!--  -->
             <!-- Signup link -->
-            <!--  -->
             <div class="col-12">
                 <p class="text-center text-secondary">New to Chatversity? &nbsp; <a [routerLink]="['/signup']" tabindex=4>Sign up</a></p>
             </div>
         </div>
-        <!--  -->
         <!-- Google Play and Apple Store Badges -->
-        <!--  -->
         <div class="col-8 offset-2 mt-3">
             <div class="row">
                 <div class="col-6 col-lg-3 offset-lg-3">
@@ -91,10 +76,8 @@
         </div>
     </div>
 
-    
+    <footer>
+        <!-- import footer -->
+        <app-footer></app-footer>
+    </footer>
 </body>
-<footer>
-    <!-- import footer -->
-    <app-footer></app-footer>
-</footer>
-</html>

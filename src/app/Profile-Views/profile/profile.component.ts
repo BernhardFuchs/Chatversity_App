@@ -5,8 +5,6 @@ import { HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { NgForm, FormGroup, FormBuilder, Validators, FormControl, MaxLengthValidator } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { User } from '../../Core/_models/user';
-import { UserProfile } from '../../Core/_models/profile';
 import { AuthService } from '../../Core/_services/auth.service';
 import { MessagingService } from '../../Core/_services/messaging.service';
 import { environment } from '../../../environments/environment.prod';
@@ -33,33 +31,22 @@ export class ProfileComponent implements OnInit {
   interests = '';
   clubs = '';
 
-  constructor(
-    private formBuilder: FormBuilder,
-    private route: ActivatedRoute,
-    private router: Router,
-    private authService: AuthService,
-    private msgService: MessagingService,
-    private http: HttpClient,
-    private _auth: AuthService,
-    private userService: UserService,
-    private app: AppComponent) {
+  constructor( private _auth: AuthService ) {
 
     this.subscription = this._auth.chatkitUser$.subscribe(
       (user) => {
         this.chatkitUser = user;
-        console.log(this.chatkitUser);
+        console.log('CHATKIT USER:', this.chatkitUser);
         this.initForm();
       }
     );
-    }
+  }
 
   ngOnInit() {
   }
 
   initForm() {
-    console.log(this.chatkitUser.name);
-
-    try{
+    try {
       this.name = this.chatkitUser.name;
     } catch (error) {
       this.name = '';
@@ -94,6 +81,5 @@ export class ProfileComponent implements OnInit {
     } catch (error) {
       this.clubs = '';
     }
-    // ─────────────────────────────────────────────────────────────────
   }
 }

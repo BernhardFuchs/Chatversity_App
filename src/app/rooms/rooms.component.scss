@@ -12,16 +12,13 @@
     position: relative;
 }
 
-
 .message-wrap {
-
     background:#F3F6F8;
     padding: 16px 16px;
     margin-top: 3px;
     border-radius: 3px;
     transition: 0.2s ease box-shadow;
     position:relative;
-
 
     &:hover:after {
         content: "";
@@ -40,7 +37,6 @@
         margin-left: 40px;
         line-height: .005 !important;
     }
-
 }
 
 .chat-footer form {

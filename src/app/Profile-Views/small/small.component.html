@@ -14,15 +14,15 @@
       <!--Body-->
       <div class="modal-body">
         <!-- Profile Image -->
-        <img src="..." onerror="this.src='../../assets/images/DefaultProfile.png'" id="user-image"
+        <img src="" onerror="this.src='../../assets/images/DefaultProfile.png'" id="user-image"
         class="rounded img-fluid mx-auto mb-1 d-block">
 
         <!-- User's Name -->
         <div class="h3 text-secondary text-light-weight mt-3">{{ this.user.name }} </div>
 
         <!-- User's Info -->
-        <p class="text-primary">&mdash; Class of {{this.user.customData.graduationYear}} &mdash;</p>
-        <p class="text-secondary mt-2">{{ this.user.customData.bio }}</p>
+        <p class="text-primary" *ngIf="this.user.customData.graduationYear">&mdash; Class of {{this.user.customData.graduationYear}} &mdash;</p>
+        <p class="text-secondary mt-2" *ngIf="this.user.customData.graduationYear">{{ this.user.customData.bio }}</p>
       </div>
 
       <!-- Footer -->

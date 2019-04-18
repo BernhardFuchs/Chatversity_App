@@ -14,6 +14,9 @@
 #mobile-header-text{
     display: inline-block;
 }
+#header-left-text{
+    padding-left: 0;
+}
 
 @media (min-width: 768px){ /*Medium*/
     #header-text{
@@ -21,6 +24,9 @@
     }
     #mobile-header-text{
         display: none;
+    }
+    #header-left-text{
+        padding-left: 15px;
     }
 }
 #logoutLink:hover{

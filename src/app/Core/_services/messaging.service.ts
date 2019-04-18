@@ -3,7 +3,7 @@ import {AuthService} from './auth.service';
 import { ChatManager, TokenProvider } from '@pusher/chatkit-client';
 import { User } from '../_models/user';
 import { BehaviorSubject, Subscription } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from '../../../environments/environment.prod';
 
 
@@ -38,7 +38,11 @@ export class MessagingService {
   //
     getReadCursorsForUser(id: number | string) {
 
-      return this.http.get(`${environment.apiUrl}/chatkit/getReadCursorsForUser/${id}`);
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+    });
+      return this.http.get(`${environment.apiUrl}/chatkit/getReadCursorsForUser/${id}`, {headers: headers});
     }
   // ─────────────────────────────────────────────────────────────────
 

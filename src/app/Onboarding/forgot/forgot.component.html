@@ -1,47 +1,41 @@
-<!DOCTYPE html>
-<html>
-  <head>
-
-  </head>
-  <body>
-    <!-- Main Container Div -->
-    <section class="d-flex align-items-center" style="margin-top: 40px; margin-bottom: 20px;">
-        <div class="container-fluid">
-          <div class="row text-center">
-            <div class="col-12 col-sm-8 offset-sm-2 col-md-6 offset-md-3 col-lg-4 offset-lg-4">
-              <div>
-                <img src="/assets/images/forgot_circle-lock.png" alt="Circle Lock">
-              </div>
-              <div class="px-5">
-                <p class="text-secondary mt-5 text-strong">Trouble logging in?</p>
-                <p class="text-light">Enter Your Email And We'll Send You A Link To Get Back Into Your Account.</p>
-              </div>
-              <form [formGroup]="forgotForm" (ngSubmit)="onSubmit()">
-                <div class="justify-content-center px-4 py-3">
-                  <div class="form-group">
-                    <input type="email" class="form-control" id="emailInput"
-                      aria-describedby="emailHelp" placeholder="Email" formControlName="email"
-                      [ngClass]="{ 'is-invalid': submitted && f.email.errors }" />
-                    <div *ngIf="submitted && f.email.errors" class="invalid-feedback text-left">
-                      <div *ngIf="f.email.errors.required">Please provide your email.</div>
-                      <div *ngIf="f.email.errors.email || f.email.errors.pattern">The email {{ f.email.value }} is invalid.</div>
-                    </div>
-
-                    <button type="submit" class="btn btn-primary btn-block mt-3 py-3" value="Send Email">SEND LOGIN LINK</button>
+<body>
+  <!-- Main Container Div -->
+  <section class="d-flex align-items-center" style="margin-top: 40px; margin-bottom: 20px;">
+      <div class="container-fluid">
+        <div class="row text-center">
+          <div class="col-12 col-sm-8 offset-sm-2 col-md-6 offset-md-3 col-lg-4 offset-lg-4">
+            <div>
+              <img src="/assets/images/forgot_circle-lock.png" alt="Circle Lock">
+            </div>
+            <div class="px-5">
+              <p class="text-secondary mt-5 text-strong">Trouble logging in?</p>
+              <p class="text-light">Enter Your Email And We'll Send You A Link To Get Back Into Your Account.</p>
+            </div>
+            <form [formGroup]="forgotForm" (ngSubmit)="onSubmit()">
+              <div class="justify-content-center px-4 py-3">
+                <div class="form-group">
+                  <input type="email" class="form-control" id="emailInput"
+                    aria-describedby="emailHelp" placeholder="Email" formControlName="email"
+                    [ngClass]="{ 'is-invalid': submitted && f.email.errors }" />
+                  <div *ngIf="submitted && f.email.errors" class="invalid-feedback text-left">
+                    <div *ngIf="f.email.errors.required">Please provide your email.</div>
+                    <div *ngIf="f.email.errors.email || f.email.errors.pattern">The email {{ f.email.value }} is invalid.</div>
                   </div>
+
+                  <button type="submit" class="btn btn-primary btn-block mt-3 py-3" value="Send Email">SEND LOGIN LINK</button>
                 </div>
-              </form>
-              <div>
-                <p class="mb-4">OR</p>
-                <a [routerLink]="['/signup']"><p class="text-primary">CREATE NEW ACCOUNT</p></a>
               </div>
-              <div class="mt-5">
-                <a [routerLink]="['/login']"><p class="mt-5" style="color: #115073; font-weight: bold;"><i class="fas fa-long-arrow-left"></i> <span class="pl-3">BACK TO LOGIN</span></p></a>
-              </div>
+            </form>
+            <div>
+              <p class="mb-4">OR</p>
+              <a [routerLink]="['/signup']"><p class="text-primary">CREATE NEW ACCOUNT</p></a>
+            </div>
+            <div class="mt-5">
+              <a [routerLink]="['/login']"><p class="mt-5" style="color: #115073; font-weight: bold;"><i class="fas fa-long-arrow-left"></i> <span class="pl-3">BACK TO LOGIN</span></p></a>
             </div>
           </div>
         </div>
-      </section>
-      <app-footer></app-footer>
-  </body>
-</html>
+      </div>
+    </section>
+    <app-footer></app-footer>
+</body>

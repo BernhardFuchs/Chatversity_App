@@ -4,8 +4,6 @@ import { environment } from '../../environments/environment';
 import { MessagingService } from '../Core/_services/messaging.service';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { AuthService } from '../Core/_services/auth.service';
-import { parse } from 'flatted';
-
 
 @Component({
   selector: 'app-messages',
@@ -19,7 +17,6 @@ export class MessagesComponent implements OnInit {
   imagePath: any;
 
   notificationCount: any;
-
 
   rooms: Array<any> = [];
   currentUser: any;
@@ -35,6 +32,7 @@ export class MessagesComponent implements OnInit {
   chatkitUser: any;
   subscription: any;
   incomingMessages: any;
+  
   get message(): string {
     return this._message;
   }

@@ -6,7 +6,7 @@
 
         <!-- Button to show edit form -->
         <button (click)="(editingForm == true ? onSubmit() : (editingForm = !editingForm))" [ngClass]="{'btn-primary': editingForm, 'btn-outline-primary': !editingForm}" class="btn px-3">
-          <i class="fa fa-edit" *ngIf="!editingForm"></i> {{ editingForm == true ? 'Save Changes' : 'Edit' }}
+          <i class="fa fa-edit" *ngIf="!editingForm"></i> {{ editingForm == true ? 'Save Changes' : 'Edit Profile' }}
         </button>
   
         <!-- Button to cancel form edit => only shown when form is displayed -->
@@ -14,14 +14,8 @@
           <i class="fa fa-times"></i> Cancel
         </button>
 
-        <!--<div class="text-center">
-          <img *ngIf="loading"
-          src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />  
-        </div>-->
-
       </div>
       <!-- end edit buttons -->
-
 
       <div class="col-12 col-sm-12 col-lg-8 my-3">
         <ng-container *ngIf="chatkitUser">
@@ -30,10 +24,6 @@
             <div *ngIf="submitted && f.name.errors">
               <div class="alert alert-danger" role="alert">Unable to update profile.</div>
             </div>
-  
-            <!-- <button *ngIf="!editMode" class="btn btn-primary btn-block my-3 py-3 text-uppercase" (click)="onClickEdit()">
-                Edit Profile <span class="fas fa-pencil ml-2"></span>
-            </button> -->
             
           <!--Name-->
           <div class="form-group mb-3">
@@ -41,7 +31,7 @@
                 <span class="text-danger" *ngIf="editMode">*</span>
               </label>
               <input type="text" class="form-control" id="name" name="name" placeholder="John Doe" required
-              formControlName="name"
+              formControlName="name" maxlength="60"
               [ngClass]="{ 'is-invalid': submitted && f.name.errors }">
   
               <div *ngIf="submitted && f.name.errors" class="invalid-feedback">

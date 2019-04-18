@@ -8,9 +8,9 @@ import { AuthService } from '../_services/auth.service';
 })
 
 export class RouteGuard implements CanActivate {
-    constructor(
-      private router: Router,
-      private authService: AuthService
+  constructor(
+    private router: Router,
+    private authService: AuthService
   ) {}
 
   canActivate(
@@ -18,13 +18,13 @@ export class RouteGuard implements CanActivate {
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
       const currentUser = this.authService.currentUser;
         if (!currentUser) {
-            // User is not authorized so return true
-            return true;
+          // User is not authorized so return true
+          return true;
         }
 
         // User is ogged in so redirect to login page via UrlTree
         const url = '/login';
         const tree: UrlTree = this.router.parseUrl(url);
         return tree;
-  }
+    }
 }

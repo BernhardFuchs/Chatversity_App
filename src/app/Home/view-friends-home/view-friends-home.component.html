@@ -22,6 +22,7 @@
       <a class="nav-link" href="#pills-search-connections" id="pills-search-connections-tab" data-toggle="pill"  role="tab" aria-controls="pills-search-connections" aria-selected="false">Search</a>
     </li>
   </ul>
+
   <div class="tab-content" id="pills-connection-actions-tabContent">
     <!-- All connections -->
     <div class="tab-pane fade show active" id="pills-all-connections" role="tabpanel" aria-labelledby="pills-all-connections">
@@ -31,7 +32,7 @@
           <div *ngFor="let c of connections" class="my-2 user-card">
               <button class="btn btn-block text-left px-3 py-2" data-toggle="modal" data-target="#profileModal"
               (click)="connection = c">
-                  <img src="..." onerror="this.src='../../assets/images/DefaultProfile.png'"
+                  <img src="" onerror="this.src='../../assets/images/DefaultProfile.png'"
                   class="circle img-fluid rounded-circle card-img" [ngClass]="{ 'border-online': c.active }"/> 
       
                   <span class="text-secondary font-weight-bold ml-3">
@@ -65,6 +66,7 @@
     <div class="tab-pane fade" id="pills-pending-connections" role="tabpanel" aria-labelledby="pills-pending-connections">
       Pending
     </div>
+
     <div class="tab-pane fade" id="pills-search-connections" role="tabpanel" aria-labelledby="pills-search-connections">
       <!--Search connections-->
       <form [formGroup]="searchForm" class="my-4">
@@ -74,30 +76,32 @@
               formControlName="search" (input)="onSearch()">
           </div>
       </form>
-        <!--Connection search results-->
-  <div class="my-2 search-results" *ngIf="(submitted && !searchForm.invalid)">
-    <div *ngIf="(results.length > 0)">
-        <div *ngFor="let result of results">
-            <button class="btn btn-block text-left px-3 py-2 my-2 user-card" data-toggle="modal" data-target="#profileModal"
-             (click)="setUser(result.id)">
-                <img src="..." onerror="this.src='../../assets/images/DefaultProfile.png'"
-                class="circle img-fluid rounded-circle card-img" [ngClass]="{ 'border-online': result.active }"/> 
-    
-                <span class="text-secondary ml-3">{{ result.firstName }} {{ result.lastName }}</span>
-            </button>
+
+      <!--Connection search results-->
+      <div class="my-2 search-results" *ngIf="(submitted && !searchForm.invalid)">
+        <div *ngIf="(results.length > 0)">
+            <div *ngFor="let result of results">
+                <button class="btn btn-block text-left px-3 py-2 my-2 user-card" data-toggle="modal" data-target="#profileModal"
+                (click)="setUser(result.id)">
+                    <img src="..." onerror="this.src='../../assets/images/DefaultProfile.png'"
+                    class="circle img-fluid rounded-circle card-img" [ngClass]="{ 'border-online': result.active }"/> 
+        
+                    <span class="text-secondary ml-3">{{ result.firstName }} {{ result.lastName }}</span>
+                </button>
+            </div>
         </div>
-    </div>
 
-    <img *ngIf="loading" class="ml-2"
-      src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
+        <div *ngIf="loading" class="spinner-border text-whiet" role="status">
+          <span class="sr-only">Loading...</span>
+        </div>
+        
+        <div *ngIf="(results.length == 0)" class="ml-2">
+          <span class="text-light">Sorry, we could not find any results.</span>
+        </div>
 
-    <div *ngIf="(results.length == 0)" class="ml-2">
-      <span class="text-light">Sorry, we could not find any results.</span>
-    </div>
-
-    <hr *ngIf="(results.length > 0)">
-  </div>
-  <!-- End connection search results -->
+        <hr *ngIf="(results.length > 0)">
+      </div>
+      <!-- End connection search results -->
       <!-- End Search connections -->
     </div>
   </div>

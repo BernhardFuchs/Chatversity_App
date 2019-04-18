@@ -36,6 +36,10 @@ app-messages, app-rooms {
     background-color:#DAE6ED;
 }
 
+.text-secondary-light{
+  color: #186fa0;
+}
+
 .text-strong{
   font-weight: 700;
 }
@@ -47,7 +51,6 @@ app-messages, app-rooms {
 .app-main {
   display: flex;
   width: calc(100vw - 88px);
-  /*width: 100%;*/
   flex-direction: column;
 }
 
