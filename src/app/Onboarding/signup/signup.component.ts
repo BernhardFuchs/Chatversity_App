@@ -31,6 +31,7 @@ const httpOptions = {
 
 @Component({
   selector: 'app-signup',
+  moduleId: module.id,
   templateUrl: './signup.component.html',
   styleUrls: ['./signup.component.css']
 })

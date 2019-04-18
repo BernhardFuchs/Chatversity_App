@@ -8,6 +8,7 @@ import { MessagingService } from './Core/_services/messaging.service';
 
 @Component({
   selector: 'app-root',
+  moduleId: module.id,
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
