@@ -1,10 +1,10 @@
 <div class="container-fluid" style="height:100vh;">
 
-  <ng-container *ngIf="current_room.name">
-    <app-top-bar [viewName]="'Rooms'" [headerText]="current_room.name"></app-top-bar>
+  <ng-container *ngIf="current_room">
+    <app-top-bar [viewName]="'Rooms'" [headerText]="current_room.name" [roomId]="current_room.id" (roomDeleted)="deleteRoom($event)"></app-top-bar>
   </ng-container>
 
-  <ng-container *ngIf="!current_room.name">
+  <ng-container *ngIf="!current_room">
     <app-top-bar [viewName]="'Rooms'" [headerText]="'Chat'"></app-top-bar>
   </ng-container>
 
@@ -16,61 +16,92 @@
     <div class="col-12 col-lg-3 overflow-auto" style="background-color:#F1F8FC; border-bottom:1px solid #DAE6ED;">
         
           <!-- Begin rooms list -->
-          <div id="messages" class="row">
+          <div *ngIf="rooms && current_room" id="messages" class="row">
             <div class="col-12 my-2 px-3">
-                <button class="btn btn-block custom-btn text-left mr-4 my-2 p-3 user-action-btn"  data-toggle="modal"
-                 data-target="#addRoomModal" (click)="roomCreated = false">New Room <i class="fa fa-plus"></i> </button>
 
-                <ng-container *ngFor="let room of rooms">
-                <button class="btn btn-block custom-btn text-left my-2 p-3" (click)="joinRoom(room.id)"
-                [ngClass]="{ 'active': current_room.id == room.id }">
-                    <div class="room d-flex align-items-center justify-content-between">
-                        <ng-container *ngIf="room?.custom_data !== undefined">
-                            <div class="" [ngStyle]="{ 'background-image': 'url(assets/avatars/' + room.customData.roomAvatar + ')', 'height':'50px', 'width':'50px', 'background-size':'cover', 'background-position':'center, center' }">
-                            </div>
-                        </ng-container>
-                        <span>{{ room.name }}</span>
-                        <span *ngIf="roomNotifications[room.id]" class="badge badge-secondary">New</span>
-                      </div>
-                  </button>
+          <ng-container *ngFor="let room of rooms">
+            <button class="btn btn-block custom-btn text-left my-2 p-3" (click)="joinRoom(room.id)"
+              [ngClass]="{ 'active': current_room.id == room.id }">
+              <div class="room d-flex align-items-center justify-content-between">
+                <ng-container *ngIf="room?.custom_data !== undefined">
+                  <div class=""
+                    [ngStyle]="{ 'background-image': 'url(assets/avatars/' + room.customData.roomAvatar + ')', 'height':'50px', 'width':'50px', 'background-size':'cover', 'background-position':'center, center' }">
+                  </div>
                 </ng-container>
+                <span>{{ room.name }}</span>
+                <span *ngIf="roomNotifications[room.id]" class="badge badge-secondary">New</span>
               </div>
-            <div *ngIf="(currentUser)" class="col-12">
-                <div class="message-wrap">
-                  <img src="{{currentUser.avatarURL}}" alt="">
-                  <span>{{ currentUser.name }}</span>
-                  <button class="btn btn-link" (click)="viewUserModal">{{ currentUser.name }}</button>
-                </div>
-            </div>
-          </div>
+            </button>
+          </ng-container>
+        </div>
+      </div>
     </div>
     <div class="col-12 col-lg-9 overflow-auto" style="background-color: #fafdff; border-left:1px solid #DAE6ED;">
-      <div class="chat-window overflow-auto" style="height: calc(100vh - 157px); position:relative;">
-        <ng-container *ngIf="room_messages">
+      <div class="chat-window overflow-auto" style="height: calc(100vh - 174px); position:relative;">
+        
+        <!--TODO: Do we still need this code? If not, DELETE-->
+        
+        <!--<ng-container *ngIf="rooms_with_messages">
           <div class="container-fluid mt-3" #chatReel>
-            <div *ngFor="let message of room_messages">
-                <ng-container *ngIf="message.room.id===current_room.id">
+            <div *ngFor="let room of rooms_with_messages | keyvalue">
+                <ng-container *ngIf="room.key===current_room.id">
                     <div class="row" id="chatReel">
-                        <!-- Messages -->
                         <div class="col-12">
-                            <span role="button" tabindex="0" class="chat-user-link text-secondary" (click)="setSelectedRoomMember(current_room.userStore.users[message.senderId])" data-toggle="modal" data-target="#profileModal"
-                            [ngClass]="{ 'text-secondary-light': (current_room.userStore.users[message.senderId].id == chatkitUser.id)}" style="font-weight:500">
-                                {{ current_room.userStore.users[message.senderId].name }}
+                            <span role="button" tabindex="0" class="chat-user-link" (click)="setSelectedRoomMember(current_room.users[room.value.senderId])" data-toggle="modal" data-target="#profileModal" style="font-weight:500">
+                                {{ room.value.sender.name }}
                             </span>
-                          <small class="text-muted pl-1" style="font-size:12px;">{{ message.createdAt | date:'shortTime' }}</small>
-                          <p style="color:#626e7a; font-size:15px;">{{ message.parts[0].payload.content }}</p>
+                          <small class="text-muted pl-1" style="font-size:12px;">
+                            <span *ngIf="MessageSentToday(room.value.createdAt);else full_date">Today at {{ room.value.createdAt | date:'shortTime' }}</span>
+                            <ng-template #full_date>{{ room.value.createdAt | date }} at {{ room.value.createdAt | date:'shortTime' }}</ng-template>
+                          </small>
+                          <p style="color:#626e7a; font-size:15px;">{{ room.value.parts[0].payload.content }}</p>
                           <hr>
                         </div>
                       </div>
-                </ng-container>
+                </ng-container>-->
               
+        <ng-container *ngIf="room_messages">
+          <div class="container-fluid mt-3 mb-2" #chatReel>
+            <div *ngFor="let message of room_messages">
+
+              <ng-container *ngIf="message.room.id===current_room.id">
+                <div class="row" id="chatReel">
+                  <!-- Messages -->
+                  <div class="col-12">
+                    <div class="col-12 col-md-10 my-2 p-3"
+                      [ngClass]="message.senderId == currentUser.id ? 'message my-message
+                      offset-md-2' : 'message user-message'">
+
+                      <span role="button" tabindex="0" class="chat-user-link"
+                        (click)="setSelectedRoomMember(message.sender)"
+                        data-toggle="modal" data-target="#profileModal"
+                        [ngClass]="message.senderId == currentUser.id ? 'text-white' : 'text-secondary'"
+                        style="font-weight:500">
+                        {{ message.sender.name }}
+                      </span>
+                      <small class="text-muted pl-1 message-date" style="font-size:12px;">
+                        <span *ngIf="MessageSentToday(message.createdAt);else full_date">Today at
+                          {{ message.createdAt | date:'shortTime' }}</span>
+                        <ng-template #full_date>{{ message.createdAt | date }} at
+                          {{ message.createdAt | date:'shortTime' }}</ng-template>
+                      </small>
+                      <div class="message-body" style="color:#626e7a; font-size:15px;">{{ message.parts[0].payload.content }}</div>
+                      <!-- <hr> -->
+                    </div>
+                  </div>
+                </div>
+              </ng-container>
+
             </div>
           </div>
         </ng-container>
+
       </div>
-      <div class="chat-footer" style="position: absolute; bottom: 0; left: 0; width: 100%;">
+      
+      <div class="chat-footer" style="position: absolute; bottom: 0; left: 0; width: 100%;"
+      *ngIf="(current_room)">
         <!--TODO: Change placeholder to only display room name if room name is defined-->
-        <form (ngSubmit)='sendMessage()'>
+        <form autocomplete="off" (ngSubmit)='sendMessage()'>
           <input [placeholder]="(current_room.name) ? 'Message ' + current_room.name : 'Message'" type="text" name="message" [(ngModel)]="message">
         </form>
       </div>
@@ -79,9 +110,8 @@
     <!-- view user modal -->
     <app-small *ngIf="selectedRoomMember" [user]="selectedRoomMember" [isConnection]="isConnection"></app-small>
     <!-- end view user modal -->
-    
+
   </div>
-  <!-- Messages Header -->
 </div>
 
 <!-- Create room modal -->
@@ -93,13 +123,13 @@
       <div class="alert alert-success alert-dismissible fade show" role="alert">
         <strong>Success!</strong> Created room
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
+          <span aria-hidden="true">&times;</span>
         </button>
       </div>
     </div>
-  </div>  <!-- End success modal dialog -->
+  </div> <!-- End success modal dialog -->
 
-  <div *ngIf="!roomCreated" class="modal-dialog" role="document">
+  <div *ngIf="!roomCreated && currentUser" class="modal-dialog" role="document">
     <div class="modal-content">
       <!-- Modal Header -->
       <div class="modal-header">
@@ -115,8 +145,10 @@
           <!-- Room Name -->
           <div class="form-group" formGroupName="roomNameGroup">
             <label for="room_name">Room name</label>
-            <input id="room_name" formControlName="roomName" placeholder="Enter a room name" type="text" class="form-control" required>
-            <small id="roomNameHelp" class="form-text text-muted">A room name must be no longer than 60 characters.</small>
+            <input id="room_name" formControlName="roomName" placeholder="Enter a room name" type="text"
+              class="form-control" required>
+            <small id="roomNameHelp" class="form-text text-muted">A room name must be no longer than 60
+              characters.</small>
           </div>
           <!-- Private? -->
           <div class="form-group" formGroupName="privateRoomGroup">
@@ -128,21 +160,21 @@
           <!-- Room Avatar -->
           <div class="form-group" formGroupName="userAvatarFileGroup">
             <div class="form-control-file">
-              <div class="custom-file">
-                <img src={{imagePath}} width="150" alt="Thumb preview...">
-                <input formControlName="avatar" (change)="onFileChange($event)" type="file" accept=".png, .jpg, .jpeg" class="custom-file-input" id="avatar" #avatar>
-                <label class="custom-file-label" for="avatar">Choose file</label>
-              </div>
+              <file-pond #newRoomPond 
+              [options]="pondOptions" 
+              [files]="pondFiles"
+              (oninit)="pondHandleInit()"
+              (onaddfile)="pondHandleAddFile($event)">
+              </file-pond>
             </div>
           </div>
-          <!-- Submit -->
-          <button type="submit" class="btn btn-primary" [disabled]="!formImport.valid">Submit</button>
+          <button type="submit" class="btn btn-primary" [disabled]="!formImport.valid">Create room</button>
         </form>
       </div>
       <!-- Modal Footer -->
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
+          <!-- Submit -->
+          
       </div>
     </div> <!-- End modal content -->
   </div> <!-- End modal dialog -->

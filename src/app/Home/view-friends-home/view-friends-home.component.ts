@@ -1,12 +1,12 @@
-import { Component, OnInit } from '@angular/core';
-import { NgForm, FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
-import { User } from '../../Core/_models/user';
-import { HttpClient } from '@angular/common/http';
-import { environment } from '../../../environments/environment.prod';
-import { UserService } from '../../Core/_services/user.service';
-import { MessagingService } from '../../Core/_services/messaging.service';
-import { AppComponent } from '../../app.component';
-import { AuthService } from '../../Core/_services/auth.service';
+import { Component, OnInit } from '@angular/core'
+import { NgForm, FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms'
+import { HttpClient } from '@angular/common/http'
+import { environment } from '../../../environments/environment.prod'
+import { UserService } from '../../Core/_services/user.service'
+import { MessagingService } from '../../Core/_services/messaging.service'
+import { AppComponent } from '../../app.component'
+import { AuthService } from '../../Core/_services/auth.service'
+import { View } from '../../Core/_models/view'
 
 @Component({
   selector: 'app-view-friends-home',
@@ -15,21 +15,22 @@ import { AuthService } from '../../Core/_services/auth.service';
 })
 export class ViewFriendsHomeComponent implements OnInit {
 
-  searchForm: FormGroup;
-  loading = false;
-  submitted = false;
-  connections: any;
-  connection: User;
-  isConnection = false;
-  currUser: any;
-  appUser: any;
-  results: User[];
-  // Field for connection
-  connectionToAdd = new FormControl('');
-  subscription: any;
-  chatkitUser: any;
-  rooms: any;
+  connections: any
 
+  // Field for connection
+  connectionToAdd = new FormControl('')
+  subscription: any
+  rooms: any
+
+  currentUser: any
+  onlineUsers: any
+
+  AllView: View = { id: 1, name: 'All', current: false }
+  OnlineView: View = { id: 2, name: 'Online', current: false }
+  PendingView: View = { id: 3, name: 'Pending', current: false }
+  SearchView: View = { id: 4, name: 'Search', current: false }
+
+  views: View[] = [this.AllView, this.OnlineView, this.PendingView, this.SearchView]
 
   //
   // ─── CONSTRUCTOR ────────────────────────────────────────────────────────────────
@@ -40,68 +41,40 @@ export class ViewFriendsHomeComponent implements OnInit {
       private _userService: UserService,
       private _msgService: MessagingService,
       private app: AppComponent,
-      private _auth: AuthService) {
-        this.subscription = this._auth.chatkitUser$.subscribe(
-          (user) => {
-            this.chatkitUser = user;
-            console.log(this.chatkitUser);
-            this.rooms = user.rooms;
-            console.log(this.rooms);
-          }
-        );
-
-        // this.incomingMessages = this._auth.messages$.subscribe(
-        //   (incomingMessage) => {
-        //     this.room_messages.push(incomingMessage);
-        //   }
-        // );
-
-        // this.current_room = this._auth.currentRoom$.subscribe(
-        //   (currentRoom) => {
-        //     this.current_room = currentRoom;
-        //     console.log(currentRoom);
-        //   }
-        // );
-      }
+      private authService: AuthService) { }
   // ────────────────────────────────────────────────────────────────────────────────
-
-
-
-  //
-  // ─── CONVENIENCE GETTER FOR EASY ACCESS TO FORM FIELDS ──────────────────────────
-  //
-
-    get f() { return this.searchForm.controls; }
-  // ────────────────────────────────────────────────────────────────────────────────
-
-
 
   //
   // ─── ADD CONNECTION ─────────────────────────────────────────────────────────────
   //
 
     addConnection() {
-      console.log(this.connectionToAdd.value);
-      // Get okta user by login (email)
-      this.http.get(`${environment.apiUrl}/okta/GetUserByLogin/${this.connectionToAdd.value}` )
-      .toPromise()
-      .then((oktaUser) => {
-        console.log(oktaUser);
-        // Get the user from Chatkit by matching the IDs
-        this.http.get(`${environment.apiUrl}/chatkit/GetUserById/${oktaUser['id']}`)
-        .toPromise()
-        .then((chatkitUser) => {
-          // Found user => add 'connection request marker' to custom data field
-          // TODO: Check if users are already connected
-
-        })
-        .catch((error) => {
-          console.log('Chatkit user not found!');
-        });
+      const userId = '00udacjrnsj15ezNA356'
+      this._userService.inviteConnection(userId).toPromise().then((user) => {
+        console.log(user)
       })
-      .catch((error) => {
-        console.log('Okta user not found!');
-      });
+
+      // console.log(this.connectionToAdd.value)
+      // // Get okta user by login (email)
+      // this.http.get(`${environment.apiUrl}/okta/GetUserByLogin/${this.connectionToAdd.value}` )
+      // .toPromise()
+      // .then((oktaUser) => {
+      //   console.log(oktaUser)
+      //   // Get the user from Chatkit by matching the IDs
+      //   this.http.get(`${environment.apiUrl}/chatkit/GetUserById/${oktaUser['id']}`)
+      //   .toPromise()
+      //   .then((currentUser) => {
+      //     // Found user => add 'connection request marker' to custom data field
+      //     // TODO: Check if users are already connected
+
+      //   })
+      //   .catch((error) => {
+      //     console.log('Chatkit user not found!')
+      //   })
+      // })
+      // .catch((error) => {
+      //   console.log('Okta user not found!')
+      // })
     }
   // ─────────────────────────────────────────────────────────────────
 
@@ -111,9 +84,9 @@ export class ViewFriendsHomeComponent implements OnInit {
   // ─── RETURN USER FROM FRIEND LIST ───────────────────────────────────────────────
   //
 
-    getUser(_id: number): User {
-      return this.connections.find(c => c.id === _id);
-    }
+  getUser(_id: number): any {
+    return this.connections.find(c => c.id === _id)
+  }
   // ────────────────────────────────────────────────────────────────────────────────
 
 
@@ -121,104 +94,65 @@ export class ViewFriendsHomeComponent implements OnInit {
   // ─── SORT CONNECTIONS LIST ──────────────────────────────────────────────────────
   //
 
-    sortList(users: User[]) {
-      return  users.sort((a, b) => ((a.firstName.toLowerCase() + ' ' + a.lastName.toLowerCase())
-      > (b.firstName.toLowerCase() + ' ' + b.lastName.toLowerCase()) ? 1 : -1));
-    }
+  sortList(users: any) {
+    return  users.sort((a, b) => ((a.firstName.toLowerCase() + ' ' + a.lastName.toLowerCase())
+    > (b.firstName.toLowerCase() + ' ' + b.lastName.toLowerCase()) ? 1 : -1))
+  }
   // ────────────────────────────────────────────────────────────────────────────────
-
-
-
-  //
-  // ─── FILTER LIST OF USERS BY NAME ───────────────────────────────────────────────
-  //
-
-    getUsersByName(_name: string) {
-      _name = _name.toLowerCase();
-      this.results = this.connections.filter(c =>
-        (c.firstName.toLowerCase() + ' ' + c.lastName.toLowerCase()).includes(_name)).slice(0, 5);
-    }
-  // ────────────────────────────────────────────────────────────────────────────────
-
 
 
   //
   // ─── CHECK IF USERS ARE FRIENDS ─────────────────────────────────────────────────
   //
 
-    isConnected(_id: number) {
-      // Get current user data
+  isConnected(_id: number) {
+    // Get current user data
 
-      // Check if this user is on the other user's connections list
+    // Check if this user is on the other user's connections list
 
-      // Toggle isConnection variable
+    // Toggle isConnection variable
 
-      return;
-    }
+    return
+  }
   // ─────────────────────────────────────────────────────────────────
 
-
-
   //
-  // ─── HANDLE CLICK USER BUTTON ───────────────────────────────────────────────────
+  // ─── SET ALL VIEW CURRENT ATTRIBUTE TO FALSE ─────────────────────────────────────────────────
   //
 
-    setUser(_id: number) {
-      this.connection = this.getUser(_id);
-      this.isConnected(_id);
-    }
+  setViewsToFalse() {
+    this.views.forEach(function(view) {
+      view.current = false
+    })
+  }
   // ─────────────────────────────────────────────────────────────────
 
-
-
   //
-  // ─── HANDLE SIGN UP ─────────────────────────────────────────────────────────────
+  // ─── SET CLICKED VIEW TO TRUE ─────────────────────────────────────────────────
   //
 
-    onSearch() {
-      this.submitted = true;
-      this.loading = true;
-
-      if (this.searchForm.invalid) {
-        this.submitted = false;
-        this.loading = false;
-        return;
-      }
-
-      const query: string = this.searchForm.get('search').value;
-
-      this.getUsersByName(query);
-
-      this.loading = false;
-    }
-  // ────────────────────────────────────────────────────────────────────────────────
-
-
+  setView(_view: View) {
+    this.setViewsToFalse()
+    _view.current = true
+  }
+  // ─────────────────────────────────────────────────────────────────
 
   ngOnInit() {
+    this.AllView.current = true
 
-    //
-    // ─── LOAD USER CONNECTIONS ───────────────────────────────────────
-    //
+    this._msgService.getOnlineUsers().subscribe((userAndState) => {
+      console.log(userAndState)
+    })
 
-      this._userService.getConnections(this.chatkitUser.id)
+    this.authService.getCurrentUser().subscribe((user) => {
+      this.currentUser = user
+
+      this._userService.getConnections(user.id)
       .toPromise()
       .then((connections) => {
-        this.connections = connections;
-        console.log(connections);
-      });
-    // ────────────────────────────────────────────────────────────────────────────────
-
-
-
-    //
-    // ─── SETUP SEARCH BOX ────────────────────────────────────────────
-    //
-
-      this.searchForm = this.formBuilder.group({
-        search: ['', Validators.required]
-      });
-    // ─────────────────────────────────────────────────────────────────
-
+        this.connections = connections
+        console.log(connections)
+      })
+    })
   }
 }

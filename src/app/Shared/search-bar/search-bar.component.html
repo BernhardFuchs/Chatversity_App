@@ -1,0 +1,60 @@
+<app-small *ngIf="selectedUser" [user]="selectedUser" [isConnection]="false"></app-small>
+
+<!--Search Bar-->
+<form [formGroup]="searchForm" class="my-4">
+  <div class="form-group mb-3">
+      <input type="search" required class="form-control primary-border" id="search" name="search" placeholder="Search" 
+      formControlName="search" (input)="onSearch()">
+  </div>
+</form>
+
+<!--Search results-->
+<div class="my-2 search-results" *ngIf="(submitted && !searchForm.invalid)">
+  <div *ngIf="(userResults)">
+      <div class="text-light">Users:</div> <hr>
+      <div *ngFor="let user of userResults">
+          <button class="btn btn-block text-left px-3 py-2 my-2 user-card" data-toggle="modal"  data-target="#profileModal"
+          (click)="setUser(user)">
+          
+          <span class="position-relative d-inline-block">
+            <img src="" onerror="this.src='../../assets/images/DefaultProfile.png'"
+            class="circle img-fluid rounded-circle card-img"/> 
+            <span class="position-absolute" style="bottom:0; right: 0; transform: translate(20%, 20%);"><i class="fa fa-circle fa-xs text-success"></i></span>
+          </span>
+        
+              <!--<span class="online-indicator ml-3"><i style="font-size: 0.6em;" class="fa fa-circle"
+                [ngClass]="getUserActivityStatus(user.id) ? 'text-success' : 'text-danger'"></i>
+              </span>-->
+  
+              <span class="text-secondary ml-3">{{ user.name }}</span>
+              <!--<small *ngIf="currUser.presenceStore" class="text-muted pl-1" style="font-size:12px;">{{ currUser.presenceStore[user.id] }}</small>-->
+          </button>
+      </div>
+  </div>
+
+  <div *ngIf="userType">
+    <div *ngIf="(userResults.length===0 && submitted)">
+      <span class="text-light ml-2">Sorry, we could not find any users.</span>
+    </div>
+  </div>
+
+  <div *ngIf="(roomResults)" class="mt-5">
+      <div class="text-light">Rooms:</div> <hr>
+      <div *ngFor="let room of roomResults">
+          <button class="btn btn-block text-left px-3 py-2 my-2 user-card"
+          (click)="setRoom(room)">
+              <span class="text-secondary ml-3">{{ room.name }}</span>
+          </button>
+      </div>
+  </div>
+
+  <div *ngIf="loading" class="spinner-border text-white" role="status">
+    <span class="sr-only">Loading...</span>
+  </div>
+
+  <div *ngIf="roomType">
+    <div *ngIf="(roomResults.length===0 && submitted)">
+      <span class="text-light ml-2">Sorry, we could not find any rooms.</span>
+    </div>
+  </div>
+</div>

@@ -19,7 +19,6 @@ export class MessagesComponent implements OnInit {
   notificationCount: any;
 
   rooms: Array<any> = [];
-  currentUser: any;
   user_id: any;
   room_messages: Array<any> = [];
   // room_messages: Observable<any[]>;
@@ -29,10 +28,10 @@ export class MessagesComponent implements OnInit {
   _message = '';
   roomCreated: boolean;
   roomNotifications: Array<any> = [];
-  chatkitUser: any;
+  currentUser: any;
   subscription: any;
   incomingMessages: any;
-  
+
   get message(): string {
     return this._message;
   }
@@ -64,32 +63,7 @@ export class MessagesComponent implements OnInit {
     })
   });
 
-  constructor(private http: HttpClient, private msgService: MessagingService, private _auth: AuthService) {
-
-    this.subscription = this._auth.chatkitUser$.subscribe(
-      (user) => {
-        // console.log(user);
-        this.chatkitUser = user;
-        console.log(this.chatkitUser);
-        this.rooms = user.rooms;
-        console.log(this.rooms);
-      }
-    );
-
-    this.incomingMessages = this._auth.messages$.subscribe(
-      (incomingMessage) => {
-        this.room_messages.push(incomingMessage);
-      }
-    );
-
-    this.current_room = this._auth.currentRoom$.subscribe(
-      (currentRoom) => {
-        this.current_room = currentRoom;
-        console.log(currentRoom);
-      }
-    );
-
-  }
+  constructor(private http: HttpClient, private msgService: MessagingService, private authService: AuthService) {}
 
   url: string;
   onFileChange(event) {
@@ -108,7 +82,7 @@ export class MessagesComponent implements OnInit {
   // Send a message
   sendMessage() {
     const { message, currentUser } = this;
-    this.chatkitUser.sendMessage({
+    this.currentUser.sendMessage({
       text: message,
       roomId: this.current_room.id,
     }).then(res => {
@@ -120,17 +94,17 @@ export class MessagesComponent implements OnInit {
 
   // Join a room
   joinRoom(roomID) {
-    this.chatkitUser.joinRoom({roomId: roomID}).then(room => {
+    this.currentUser.joinRoom({roomId: roomID}).then(room => {
       this.current_room = room;
 
       // After joining room, fetch messages
-      this.chatkitUser.fetchMultipartMessages({roomId: roomID}).then(messages => {
+      this.currentUser.fetchMultipartMessages({roomId: roomID}).then(messages => {
 
         // Check if messages
         if (messages === undefined || messages.length === 0) { return; }
 
         // Set read cursor
-        this.chatkitUser.setReadCursor({
+        this.currentUser.setReadCursor({
           roomId: this.current_room.id,
           position: messages[messages.length - 1].id
         })
@@ -159,12 +133,12 @@ export class MessagesComponent implements OnInit {
     let hasUnread = false; // Track return status
 
     // First, check if cursor exists
-    const cursor = this.chatkitUser.readCursor({
+    const cursor = this.currentUser.readCursor({
       roomId: roomID
     });
 
       // if read cursor ID !== latest message ID...
-      this.chatkitUser.fetchMultipartMessages({ // Get latest message
+      this.currentUser.fetchMultipartMessages({ // Get latest message
         roomId: roomID,
         limit: 1,
       })
@@ -211,7 +185,7 @@ export class MessagesComponent implements OnInit {
   //
 
     subscribeToRoom(roomID) {
-      this.chatkitUser.subscribeToRoomMultipart({
+      this.currentUser.subscribeToRoomMultipart({
         roomId: roomID,
         hooks: {
           onMessage: message => {
@@ -221,7 +195,7 @@ export class MessagesComponent implements OnInit {
             this.room_messages.push(message);
 
             // Get the users last cursor position from the room
-            const cursor = this.chatkitUser.readCursor({
+            const cursor = this.currentUser.readCursor({
               roomId: message.roomId
             });
 
@@ -232,7 +206,7 @@ export class MessagesComponent implements OnInit {
             } else {
               // Otherwise, message was sent in current room, so all we must do is update the
               // read cursor for the current user's room
-              this.chatkitUser.setReadCursor({
+              this.currentUser.setReadCursor({
                 roomId: message.roomId,
                 position: message.id,
               });
@@ -244,7 +218,7 @@ export class MessagesComponent implements OnInit {
               roomsWithNotifications += room === true ? 1 : 0;
             });
             // Add to global notification counter
-            this.msgService.setRoomsWithNotifications(roomsWithNotifications);
+            // this.msgService.setRoomsWithNotifications(roomsWithNotifications);
           },
           onAddedToRoom: room => {
             console.log(`Added to room ${room.name}`);
@@ -289,7 +263,7 @@ export class MessagesComponent implements OnInit {
       console.log(res);
 
       console.log('Image uploaded');
-      this.chatkitUser.createRoom({ // Create the room
+      this.currentUser.createRoom({ // Create the room
         name: roomName,
         private: true,
         customData: { roomAvatar: res['_id'] },
@@ -309,52 +283,11 @@ export class MessagesComponent implements OnInit {
 
 
   ngOnInit() {
-
-    // console.log(this.chatkitUser);
-    // console.log(this.chatkitUser.roomStore.rooms);
-    console.log(this.rooms);
-    console.log(this.room_messages);
-    // this.chatkitUser.rooms;
-    console.log(Object.keys(this.rooms));
-    // this.rooms.forEach((room) => {
-    //   console.log(room);
-    // });
-
-
-    console.log(this.rooms);
-
-    // console.log('Connected as user ', user);
-    // this.chatkitUser = user;
-    // this.rooms = user.rooms;
-
-    // Iterate through rooms and subscribe to each
-
-    // Join first room in array
-    // TODO: refactor this implementation
-
-    // this.chatkitUser.joinRoom({roomId: this.rooms[0].id}).then(room => {
-    //   this.current_room = room;
-
-
-    //   // Fetch all messages for joined room
-    //   this.chatkitUser.fetchMultipartMessages({
-    //     roomId: this.rooms[0].id,
-    //     limit: 10,
-    //   }).then(messages => {
-    //     messages.forEach(message => {
-    //       // console.log(message.parts[0].payload.content);
-    //     });
-    //     this.room_messages = messages;
-    //   });
-    // });
-
-
-  // Get user id from local storage
-  const user_id = JSON.parse(localStorage.getItem('currentUser'))._embedded.user.id;
-
-    // Subscribe to new notifications
-    this.msgService.notificationCount
-    .subscribe(notification => this.notificationCount = notification);
-    // console.log(this.chatkitUser);
+    this.subscription = this.authService.currentUser.subscribe(
+      (user) => {
+        this.currentUser = user;
+        this.rooms = user.rooms;
+      }
+    );
     }
 }

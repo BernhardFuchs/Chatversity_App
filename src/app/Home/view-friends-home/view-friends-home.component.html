@@ -1,6 +1,8 @@
 <div class="container-fluid mt-4">
 
-  <app-small id="profileModal" *ngIf="connection" [user]="connection" [isConnection]="isConnection"></app-small>
+  <div *ngIf="this.SearchView.current === false">
+      <app-small *ngIf="connection" [user]="connection" [isConnection]="isConnection"></app-small>
+  </div>
 
   <div class="row">
     <div class="col">
@@ -10,18 +12,23 @@
       <a class="nav-link" href="#" data-toggle="modal" data-target="#addConnectionModal">Add Connection</a>
     </li>
     <li class="nav-item">
-      <a class="nav-link active" href="#pills-all-connections" id="pills-all-connections-tab" data-toggle="pill" role="tab" aria-controls="pills-all-connections" aria-selected="true">All</a>
+      <a class="nav-link active" href="#pills-all-connections" id="pills-all-connections-tab" (click)="setView(this.AllView)"
+       data-toggle="pill" role="tab" aria-controls="pills-all-connections" aria-selected="true">All</a>
     </li>
     <li class="nav-item">
-      <a class="nav-link" href="#pills-online-connections" id="pills-online-connections-tab" data-toggle="pill"  role="tab" aria-controls="pills-online-connections" aria-selected="false">Online</a>
+      <a class="nav-link" href="#pills-online-connections" id="pills-online-connections-tab" (click)="setView(this.OnlineView)"
+       data-toggle="pill"  role="tab" aria-controls="pills-online-connections" aria-selected="false">Online</a>
     </li>
     <li class="nav-item">
-      <a class="nav-link" href="#pills-pending-connections" id="pills-pending-connections-tab" data-toggle="pill"  role="tab" aria-controls="pills-pending-connections" aria-selected="false">Pending</a>
+      <a class="nav-link" href="#pills-pending-connections" id="pills-pending-connections-tab" (click)="setView(this.PendingView)"
+       data-toggle="pill"  role="tab" aria-controls="pills-pending-connections" aria-selected="false">Pending</a>
     </li>
     <li class="nav-item">
-      <a class="nav-link" href="#pills-search-connections" id="pills-search-connections-tab" data-toggle="pill"  role="tab" aria-controls="pills-search-connections" aria-selected="false">Search</a>
+      <a class="nav-link" href="#pills-search-connections" id="pills-search-connections-tab" (click)="setView(this.SearchView)"
+       data-toggle="pill"  role="tab" aria-controls="pills-search-connections" aria-selected="false">Search</a>
     </li>
   </ul>
+
 
   <div class="tab-content" id="pills-connection-actions-tabContent">
     <!-- All connections -->
@@ -29,15 +36,15 @@
       <div class="my-5">
         <span class="sr-only">All Connections</span>
         <ng-container *ngIf="connections">
-          <div *ngFor="let c of connections" class="my-2 user-card">
-              <button class="btn btn-block text-left px-3 py-2" data-toggle="modal" data-target="#profileModal"
+          <div *ngFor="let c of connections" class="my-2">
+              <button class="btn btn-block text-left px-3 py-2 user-card" data-toggle="modal" data-target="#profileModal"
               (click)="connection = c">
                   <img src="" onerror="this.src='../../assets/images/DefaultProfile.png'"
                   class="circle img-fluid rounded-circle card-img" [ngClass]="{ 'border-online': c.active }"/> 
       
-                  <span class="text-secondary font-weight-bold ml-3">
+                  <span class="text-secondary ml-3">
                     {{ c.name }}
-                    <small style="font-size:12px; color:#96b7c9;">{{ appUser.presenceStore[c.id] }}</small>
+                    <small *ngIf="currentUser.presenceStore" class="text-muted pl-1" style="font-size:12px;">{{ currentUser.presenceStore[c.id] }}</small>
                   </span>
               </button>
             </div>
@@ -49,14 +56,14 @@
     <div class="tab-pane fade" id="pills-online-connections" role="tabpanel" aria-labelledby="pills-online-connections">
       <div class="my-5">
         <span class="sr-only">Online Connections</span>
-        <div *ngFor="let c of connections" class="my-2 user-card">
-          <button class="btn btn-block text-left px-3 py-2" data-toggle="modal" data-target="#profileModal"
-          (click)="connection = c">
+        <div *ngFor="let c of connections" class="my-2">
+          <button class="btn btn-block text-left px-3 py-2 user-card" data-toggle="modal" data-target="#profileModal"
+          *ngIf="currentUser.presenceStore[c.id] === 'online'" (click)="connection = c">
               <img src="..." onerror="this.src='../../assets/images/DefaultProfile.png'"
               class="circle img-fluid rounded-circle card-img" [ngClass]="{ 'border-online': c.active }"/> 
-              <span class="text-secondary font-weight-bold ml-3">
+              <span class="text-secondary ml-3">
                   {{ c.name }}
-                  <small style="font-size:12px; color:#96b7c9;">{{ appUser.presenceStore[c.id] }}</small>
+                  <small *ngIf="currentUser.presenceStore" class="text-muted pl-1" style="font-size:12px;">{{ currentUser.presenceStore[c.id] }}</small>
                 </span>
           </button>
         </div>
@@ -64,51 +71,18 @@
     </div>
     <!-- End online connections -->
     <div class="tab-pane fade" id="pills-pending-connections" role="tabpanel" aria-labelledby="pills-pending-connections">
-      Pending
+      
     </div>
 
     <div class="tab-pane fade" id="pills-search-connections" role="tabpanel" aria-labelledby="pills-search-connections">
       <!--Search connections-->
-      <form [formGroup]="searchForm" class="my-4">
-          <!--Search Bar-->
-          <div class="form-group mb-3">
-              <input type="search" required class="form-control primary-border" id="search" name="search" placeholder="Search" 
-              formControlName="search" (input)="onSearch()">
-          </div>
-      </form>
-
-      <!--Connection search results-->
-      <div class="my-2 search-results" *ngIf="(submitted && !searchForm.invalid)">
-        <div *ngIf="(results.length > 0)">
-            <div *ngFor="let result of results">
-                <button class="btn btn-block text-left px-3 py-2 my-2 user-card" data-toggle="modal" data-target="#profileModal"
-                (click)="setUser(result.id)">
-                    <img src="..." onerror="this.src='../../assets/images/DefaultProfile.png'"
-                    class="circle img-fluid rounded-circle card-img" [ngClass]="{ 'border-online': result.active }"/> 
-        
-                    <span class="text-secondary ml-3">{{ result.firstName }} {{ result.lastName }}</span>
-                </button>
-            </div>
-        </div>
-
-        <div *ngIf="loading" class="spinner-border text-whiet" role="status">
-          <span class="sr-only">Loading...</span>
-        </div>
-        
-        <div *ngIf="(results.length == 0)" class="ml-2">
-          <span class="text-light">Sorry, we could not find any results.</span>
-        </div>
-
-        <hr *ngIf="(results.length > 0)">
-      </div>
-      <!-- End connection search results -->
+        <app-search-bar [userType]="true" [roomType]="false"></app-search-bar>
       <!-- End Search connections -->
     </div>
   </div>
 </div>
   <!-- End Actions -->
 </div> 
-
 
   <!-- Add connection modal -->
   <div class="modal fade" id="addConnectionModal" tabindex="-1" role="dialog" aria-labelledby="addConnectionModalLabel" aria-hidden="true">

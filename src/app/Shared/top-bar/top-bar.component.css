@@ -1,11 +1,11 @@
 #messages_header {
     background-color:#FFF;
     z-index: 2;
-    font-family: 'Poppins', sans-serif;
     font-weight: bold;
     color: #94B0C0;
     top:0;
     position: sticky;
+    height: 70px;
 }
 
 #header-text{

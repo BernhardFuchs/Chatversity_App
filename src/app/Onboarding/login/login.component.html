@@ -5,22 +5,22 @@
             <div class="col-12 col-lg-8 offset-lg-2 text-center">
                 <img src="/assets/images/logo-mark-64.png" class="img-fluid img-responsive mx-auto mb-4" width="64px"
                     alt="Chatversity Logo Mark">
-                <h1 class="text-center h4 text-secondary">Login to Chatversity</h1>
+                <h1 class="text-center h4 text-secondary" style="font-family:'Poppins'; font-weight: 300;">Sign in to Chatversity</h1>
             </div>
         </div>
         <!-- Login Form -->
         <div class="row mt-5">
             <div class="col-12 col-md-8 offset-md-2 col-lg-4 offset-lg-4">
-                <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-                    <div *ngIf="submitted && f.username.errors">
-                        <div *ngIf="f.username.errors.invalid" class="alert alert-danger" role="alert">Incorrect
+                <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" autocomplete="off">
+                    <div *ngIf="submitted && loginForm.errors">
+                        <div *ngIf="loginForm.errors.invalid" class="alert alert-danger" role="alert">Incorrect
                             username or password.</div>
                     </div>
 
                     <!-- Username -->
                     <div class="form-group">
                         <label for="username" class="text-secondary">Username</label>
-                        <input type="text" name="username" formControlName="username" placeholder="Enter your username"
+                        <input type="text" name="username" formControlName="username"
                             class="form-control" tabindex=1 [ngClass]="{ 'is-invalid': submitted && f.username.errors }" />
                         <div *ngIf="submitted && f.username.errors" class="invalid-feedback">
                             <div *ngIf="f.username.errors.required">Username is required.</div>
@@ -38,12 +38,12 @@
                                 <a [routerLink]="['/forgot']" class="small"tabindex=7>Forgot Password?</a>
                             </div>
                         </div>
-                        <input type="password" formControlName="password" placeholder="Enter your password"
+                        <input type="password" formControlName="password"
                             class="form-control" tabindex=2 [ngClass]="{ 'is-invalid': submitted && f.password.errors }" />
                         <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
                             <div *ngIf="f.password.errors.required">Password is required.</div>
                         </div>
-                        <button [disabled]="loading" class="btn btn-login btn-primary btn-block mt-4 py-3" tabindex=3><span *ngIf="!loading">LOGIN</span>
+                        <button [disabled]="loading" class="btn btn-primary btn-block mt-4" tabindex=3><span *ngIf="!loading">Sign in</span>
                             <div *ngIf="loading" class="spinner-border text-whiet" role="status">
                                 <span class="sr-only">Loading...</span>
                             </div>
@@ -54,7 +54,7 @@
             </div>
             <!-- Signup link -->
             <div class="col-12">
-                <p class="text-center text-secondary">New to Chatversity? &nbsp; <a [routerLink]="['/signup']" tabindex=4>Sign up</a></p>
+                <p class="text-center text-secondary">New to Chatversity? &nbsp;<a [routerLink]="['/signup']" tabindex=4>Create an account.</a></p>
             </div>
         </div>
         <!-- Google Play and Apple Store Badges -->

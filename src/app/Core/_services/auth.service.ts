@@ -1,71 +1,57 @@
-import { Injectable, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { environment } from '../../../environments/environment';
-import { ChatManager, TokenProvider } from '@pusher/chatkit-client';
-import { BehaviorSubject, Subject, ReplaySubject, } from 'rxjs';
-import { MessagingService } from './messaging.service';
-import {parse, stringify} from 'flatted';
+import { Injectable, OnInit } from '@angular/core'
+import { HttpClient } from '@angular/common/http'
+import { environment } from '../../../environments/environment'
+import { ChatManager, TokenProvider } from '@pusher/chatkit-client'
+import { BehaviorSubject, Subject, ReplaySubject, Observable, } from 'rxjs'
+import { MessagingService } from './messaging.service'
+import {parse, stringify} from 'flatted'
+import { map } from 'rxjs/operators'
+import { Router } from '@angular/router'
 
 @Injectable()
-export class AuthService implements OnInit {
+export class AuthService {
+    private _currentUser: ReplaySubject<any>
 
-    private currentRoom: any = new Subject();
-    public currentRoom$ = this.currentRoom.asObservable();
-
-    private messages: any = new Subject();
-    public messages$ = this.messages.asObservable();
-
-    private currentUserSubject: any = new Subject();
-    public currentUser = this.currentUserSubject.asObservable();
-    chatManager: any;
-
-    private user: any = new Subject();
-    public user$ = this.user.asObservable();
-
-    private chatkitUser: any = new Subject();
-    public chatkitUser$ = this.chatkitUser.asObservable();
-
-    constructor(private http: HttpClient, private _msgService: MessagingService ) {
-
-        this.currentUserSubject = new BehaviorSubject(JSON.parse(localStorage.getItem('currentUser')));
-        this.currentUser = this.currentUserSubject.asObservable();
-
-        // console.log('auth service constructed');
-
-        this.user = new BehaviorSubject(localStorage.getItem('chatkitUserId'));
-        this.user$ = this.user.asObservable();
-
-
-        // this.chatkitUser = new BehaviorSubject(localStorage.getItem('chatkitUser'));
-        this.chatkitUser = new ReplaySubject<Object>(1);
-        this.chatkitUser$ = this.chatkitUser.asObservable();
-
-        this.messages = new ReplaySubject<Object>(1);
-        this.messages$ = this.messages.asObservable();
-
-        // Only called on login
-        this.user$.subscribe((x) => {
-            // console.log(x);
-            if (!x) { return; }
-
-            this.initChatkit(x);
-        });
+    constructor(private http: HttpClient, private messageService: MessagingService, private router: Router ) {
+        this._currentUser = new ReplaySubject<any>(1)
+        this.initializeApp()
+        console.log('Auth service constructed')
     }
 
-    public get currentUserValue() {
-        return this.currentUserSubject.value;
+    get currentUser() {
+        return this._currentUser.asObservable()
+    }
+
+    set currentUser(user: any) {
+        console.log('setting current user')
+        this._currentUser.next(user)
+    }
+
+    getCurrentUser(): Observable<any> {
+        return this._currentUser.asObservable()
     }
 
 
-    public get userValue() {
-        return this.user;
+    getUserId() {
+        return localStorage.getItem('chatkitUserId')
     }
 
-    public set setUser(user) { this.user.next(user); }
 
-    // public get chatkitUserValue() {
-    //     return this.chatUserSubject.value;
-    // }
+
+    initializeApp() {
+        if (!localStorage.getItem('chatkitUserId')) { return }
+        this.messageService.initChatkit(localStorage.getItem('chatkitUserId'))
+        .then(chatkitUser => {
+            console.log('setting chatkit user')
+            localStorage.setItem('chatkitUser', chatkitUser)
+            this._currentUser.next(chatkitUser)
+        })
+    }
+
+    userLoggedIn() {
+        return localStorage.getItem('chatkitUserId') != null
+    }
+
 
 
     //
@@ -76,7 +62,7 @@ export class AuthService implements OnInit {
             // Create Okta User
             return this.http.post<any>(`${environment.apiUrl}/okta/signup`, { fname, lname, username, password })
             .toPromise()
-            .then((user) => {
+            .then(user => {
                 // console.log(user);
                 // Create chatkit user from Okta User ID
                 return this.http.post(`${environment.apiUrl}/chatkit/createuser`, {
@@ -94,18 +80,18 @@ export class AuthService implements OnInit {
                         privateAccount: false,
                         showActivityStatus: true,
                     }
-                })
-                .toPromise()
-                .then((chatkitUser) => {
+            })
+            .toPromise()
+            .then((chatkitUser) => {
                     // Created Chatkit user
-                    // console.log('Created Chatkit user!');
-                    console.log(chatkitUser);
+                    console.log('Created Chatkit user!')
+                    console.log(chatkitUser)
 
                     return this.login(username, password).then(loggedinUser => {
-                        return loggedinUser;
-                    });
-                });
-            });
+                        return loggedinUser
+                    })
+                })
+            })
         }
     // ─────────────────────────────────────────────────────────────────
 
@@ -115,69 +101,25 @@ export class AuthService implements OnInit {
     // ─── VALIDATE LOGIN THROUGH OKTA ────────────────────────────────────────────────
     //
 
-    login(username: string, password: string) {
-        return this.http.post<any>(`${environment.apiUrl}/okta/login`, { username, password })
-        .toPromise()
-        .then((user) => {
+        login(username: string, password: string) {
+            return this.http.post<any>(`${environment.apiUrl}/okta/login`, { username, password })
+            .toPromise()
+            .then((user) => {
 
-            this.currentUser = user;
-            console.log('LOGGED IN USER: ', user);
+                console.log('LOGGED IN OKTA USER: ', user)
 
-            localStorage.setItem('currentUser', JSON.stringify(user));
-            this.currentUserSubject.next(user);
+                localStorage.setItem('OktaUser', JSON.stringify(user))
 
-            localStorage.setItem('chatkitUserId', user._embedded.user.id);
-            this.user.next(user._embedded.user.id);
+                return this.messageService.initChatkit(user._embedded.user.id)
+                .then(chatkitUser => {
 
-            return user;
-        });
-    }
+                  this.currentUser = chatkitUser
+
+                  return chatkitUser
+              })
+            })
+        }
     // ─────────────────────────────────────────────────────────────────
-
-
-
-    initChatkit(userId) {
-        // console.log(userId);
-        this.chatManager = new ChatManager({
-            instanceLocator: 'v1:us1:a54bdf12-93d6-46f9-be3b-bfa837917fb5',
-            userId: userId,
-            tokenProvider: new TokenProvider({
-              url: 'https://us1.pusherplatform.io/services/chatkit_token_provider/v1/a54bdf12-93d6-46f9-be3b-bfa837917fb5/token'
-            })
-          });
-
-          return this.chatManager.connect().then(user => {
-            this.chatkitUser.next(user);
-            localStorage.setItem('chatkitUser', stringify(user));
-            console.log(`Connected as ${user.name}`);
-
-            // If user has no rooms then return
-            if (!user.rooms.length) { return user; }
-
-            user.joinRoom({ roomId: user.rooms[0].id })
-            .then(room => {
-                this.currentRoom.next(room);
-                console.log(`Joined room with ID: ${room.id}`);
-            })
-            .catch((err, room) => {
-              console.log(`Error joining room ${room.id}: ${err}`);
-            });
-
-            user.rooms.forEach(room => {
-                user.subscribeToRoomMultipart({
-                    roomId: room.id,
-                    hooks: {
-                        onMessage: message => {
-                            this.messages.next(message);
-                            // console.log('Received message:', message);
-                        }
-                    }
-                });
-            });
-
-            return user;
-          });
-    }
 
 
 
@@ -185,16 +127,12 @@ export class AuthService implements OnInit {
     // ─── HANDLE LOGOUT ──────────────────────────────────────────────────────────────
     //
 
-    logout() {
-        // TODO: Add logout function to authentication API - this is fine for now
-        // remove user from local storage to log user out
-        localStorage.removeItem('currentUser');
-        this.currentUserSubject.next(null);
-    }
+        logout() {
+            this.messageService.disconnect()
+            localStorage.clear()
+            this.router.navigate(['/login'])
+            console.clear()
+        }
     // ─────────────────────────────────────────────────────────────────
 
-    ngOnInit() {
-        console.log(this.currentUserSubject.value);
-        localStorage.setItem('chatkitUserId', null);
-    }
 }

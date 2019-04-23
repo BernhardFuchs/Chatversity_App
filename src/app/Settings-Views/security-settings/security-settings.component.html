@@ -1,14 +1,44 @@
 <div class="container">
+
+  <!-- 2FA -->
+  <!--  -->
   <div class="pt-4">
-    <h3 class="text-secondary pb-3">Two-Factor Authentication</h3>
+    <h4 class="text-secondary pb-3">Two-Factor Authentication</h4>
     <p><input type="checkbox" id="2FA">&nbsp; Two-Factor Authentication</p>
-    <p class="description">For additional security, enable two-factor authentication. Every time you sign in, you will be required to enter your password and an authentication code so we can make sure it's you.</p>
+    <p class="description">For additional security, enable two-factor authentication. Every time you sign in, you will
+      be required to enter your password and an authentication code so we can make sure it's you.</p>
     <hr />
   </div>
+
+  <!-- Change Password -->
+  <!--  -->
   <div class="pt-4">
-    <h3 class="text-secondary pb-3">Change Password</h3>
+    <h4 class="text-secondary pb-3">Change Password</h4>
     <p class="description">If you think your account has been compromised, please change your password.</p>
-      <a [routerLink]="['/forgot']"><button type="submit" class="btn btn-primary text-uppercase px-4">Change Password</button></a>
+    <button data-toggle="collapse" data-target="#changePasswordForm" class="btn btn-primary text-uppercase px-4">Change
+      Password</button>
+
+    <!-- PASSWORD FORM -->
+    <form [formGroup]="changePassForm" id="changePasswordForm" class="collapse pt-4 col-12 col-md-6">
+      <!-- old password -->
+      <div class="form-group">
+        <input formControlName="oldPassword" class="form-control" type="password" name="oldPassword" id="oldPassword" placeholder="Old Password">
+      </div>
+      <!-- new password -->
+      <div class="form-group">
+        <input formControlName="newPassword" class="form-control" type="password" name="newPassword" id="newPassword" placeholder="New Password">
+        <span *ngIf="samePassword" class="text-danger">New password cannot be the same as the old password</span>
+      </div>
+      <!-- confirm password -->
+      <div class="form-group">
+        <input formControlName="confirmPassword" class="form-control" type="password" name="confirmPassword" id="confirmPassword" placeholder="Confirm Password">
+        <span *ngIf="passwordsMatch" class="text-success">Passwords Match</span> 
+        <span *ngIf="!passwordsMatch && changePassForm.get('confirmPassword').touched" class="text-danger">Passwords must match</span> 
+         
+        
+      </div>
+      <button type="submit" class="btn btn-secondary text-uppercase px-4"(click)="onSubmit()">submit</button>
+    </form>
     <hr />
   </div>
 </div>

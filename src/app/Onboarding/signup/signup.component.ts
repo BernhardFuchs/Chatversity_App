@@ -1,16 +1,16 @@
-import { Component, OnInit } from '@angular/core';
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { NgForm, FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
-import { OktaAuthService } from '@okta/okta-angular';
-import { AuthService } from '../../Core/_services/auth.service';
-import { first } from 'rxjs/operators';
-import { University } from '../../Core/_models/university';
-import { CustomFormValidation } from '../../Core/_models/form-validation';
-import { environment } from '../../../environments/environment';
+import { Component, OnInit } from '@angular/core'
+import { Injectable } from '@angular/core'
+import { HttpClient } from '@angular/common/http'
+import { HttpHeaders } from '@angular/common/http'
+import { Observable } from 'rxjs'
+import { NgForm, FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms'
+import { ActivatedRoute, Router } from '@angular/router'
+import { OktaAuthService } from '@okta/okta-angular'
+import { AuthService } from '../../Core/_services/auth.service'
+import { first } from 'rxjs/operators'
+import { University } from '../../Core/_models/university'
+import { CustomFormValidation } from '../../Core/_models/form-validation'
+import { environment } from '../../../environments/environment'
 
 // NativeScript Imports
 import application = require("tns-core-modules/application");
@@ -27,7 +27,7 @@ const httpOptions = {
     'Content-Type':  'application/json',
     'Authorization': 'my-auth-token'
   })
-};
+}
 
 @Component({
   selector: 'app-signup',
@@ -37,15 +37,15 @@ const httpOptions = {
 })
 
 export class SignupComponent implements OnInit {
-  signupForm: FormGroup;
-  loading = false;
-  submitted = false;
-  returnUrl: string;
-  universities: University[];
-  searchingForSchool = false;
-  wrongUniversity = false;
-  formValidation: CustomFormValidation = new CustomFormValidation();
-  guessUniversity: string;
+  signupForm: FormGroup
+  loading = false
+  submitted = false
+  returnUrl: string
+  universities: University[]
+  searchingForSchool = false
+  wrongUniversity = false
+  formValidation: CustomFormValidation = new CustomFormValidation()
+  guessUniversity: string
 
   constructor(
     private formBuilder: FormBuilder,
@@ -65,9 +65,9 @@ export class SignupComponent implements OnInit {
       password: ['', Validators.compose([
         Validators.required, Validators.minLength(8), Validators.pattern(this.formValidation.passwordValidation)
       ])]
-    });
+    })
 
-    this.returnUrl = '/new-user';
+    this.returnUrl = 'new-user'
   }
 
   //
@@ -75,58 +75,58 @@ export class SignupComponent implements OnInit {
   //
   checkForFormErrors() {
     if (this.f.username.errors || this.f.password.errors) {
-      return true;
+      return true
     }
-    return false;
+    return false
   }
 
   //
   // ─── CONVENIENCE GETTER FOR EASY ACCESS TO FORM FIELDS ──────────────────────────
   //
-  get f() { return this.signupForm.controls; }
+  get f() { return this.signupForm.controls }
 
   //
   // ─── VALIDATE UNIVERSITY WITH JSON STORE ──────────────────────────────────────
   //
   validateUniversity(query: string) {
-    this.searchingForSchool = true;
+    this.searchingForSchool = true
     return this.http.get(`${environment.apiUrl}/university/name/${query}`)
     .toPromise()
     .then(university => {
-      return university;
+      return university
     })
     .catch(error => {
-      this.searchingForSchool = false;
-      return null;
-    });
+      this.searchingForSchool = false
+      return null
+    })
   }
 
   //
   // ─── SEARCH FOR UNIVERSITY FROM JSON STORE ──────────────────────────────────────
   //
   findUniversity(query: string) {
-    this.searchingForSchool = true;
+    this.searchingForSchool = true
     return this.http.get(`${environment.apiUrl}/university/${query}`)
     .toPromise()
     .then(university => {
-      return university;
+      return university
     })
     .catch(error => {
-      this.searchingForSchool = false;
-      return null;
-    });
+      this.searchingForSchool = false
+      return null
+    })
   }
 
   //
   // ─── GET UNIVERSITY BY DOMAIN ──────────────────────────────────────
   //
   async getUniversity(query: string) {
-    let data = new Object();
-    data = await this.findUniversity(query);
+    let data = new Object()
+    data = await this.findUniversity(query)
 
     if (data) {
-      this.guessUniversity = data['name'];
-      this.signupForm.get('university').setValue(this.guessUniversity);
+      this.guessUniversity = data['name']
+      this.signupForm.get('university').setValue(this.guessUniversity)
     }
   }
 
@@ -134,47 +134,47 @@ export class SignupComponent implements OnInit {
   // ─── UPDATE UNIVERSITY IF USER CHANGES INPUT ──────────────────────────────────────
   //
   userUpdateUniversity(newUniversity: string) {
-    this.guessUniversity = newUniversity;
+    this.guessUniversity = newUniversity
 
     this.validateUniversity(this.guessUniversity)
     .then(result => {
       if (!result) {
-        this.f.university.setErrors({'invalid': true});
+        this.f.university.setErrors({'invalid': true})
       }
-    });
+    })
   }
 
   //
   // ─── HANDLE SIGN UP ─────────────────────────────────────────────────────────────
   //
   onSubmit() {
-    this.submitted = true;
-    this.loading = true;
+    this.submitted = true
+    this.loading = true
 
     // stop here if form is invalid
     if (this.signupForm.invalid) {
-      this.loading = false;
-      return;
+      this.loading = false
+      return
     }
 
     // Create obj to hold formdata
-    const formData: FormData = new FormData();
+    const formData: FormData = new FormData()
 
     // Append input to form data
-    formData.append('firstname', this.signupForm.get('firstname').value);
-    formData.append('lastname', this.signupForm.get('lastname').value);
-    formData.append('university', this.guessUniversity);
-    formData.append('username', this.signupForm.get('username').value);
-    formData.append('password', this.signupForm.get('password').value);
+    formData.append('firstname', this.signupForm.get('firstname').value)
+    formData.append('lastname', this.signupForm.get('lastname').value)
+    formData.append('university', this.guessUniversity)
+    formData.append('username', this.signupForm.get('username').value)
+    formData.append('password', this.signupForm.get('password').value)
 
     this.auth.signup(this.f.firstname.value, this.f.lastname.value, this.guessUniversity, this.f.username.value, this.f.password.value)
     .then(data => {
-      this.router.navigate([this.returnUrl]);
+      this.router.navigate([this.returnUrl])
     },
     error => {
-      console.log('SIGN UP ERROR:', error);
-      this.loading = false;
-    });
+      console.log('SIGN UP ERROR:', error)
+      this.loading = false
+    })
   }
 }
 

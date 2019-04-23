@@ -1,5 +1,5 @@
 <!-- Modal -->
-<div *ngIf="user" id="profileModal" class="modal hide fade col-10 offset-1 col-md-6 offset-md-3" tabindex="-1"
+<div *ngIf="user && bio && graduationYear" id="profileModal" class="modal hide fade col-10 offset-1 col-md-6 offset-md-3" tabindex="-1"
   role="dialog" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content text-center">
@@ -14,20 +14,20 @@
       <!--Body-->
       <div class="modal-body">
         <!-- Profile Image -->
-        <img src="" onerror="this.src='../../assets/images/DefaultProfile.png'" id="user-image"
-        class="rounded img-fluid mx-auto mb-1 d-block">
+        <!-- <img src="" onerror="this.src='../../assets/images/DefaultProfile.png'" id="user-image"
+        class="rounded img-fluid mx-auto mb-1 d-block"> -->
 
         <!-- User's Name -->
         <div class="h3 text-secondary text-light-weight mt-3">{{ this.user.name }} </div>
 
         <!-- User's Info -->
-        <p class="text-primary" *ngIf="this.user.customData.graduationYear">&mdash; Class of {{this.user.customData.graduationYear}} &mdash;</p>
-        <p class="text-secondary mt-2" *ngIf="this.user.customData.graduationYear">{{ this.user.customData.bio }}</p>
+        <p class="text-primary">&mdash; Class of {{ graduationYear }} &mdash;</p>
+        <p class="text-secondary mt-2">{{ bio }}</p>
       </div>
 
       <!-- Footer -->
       <div class="modal-footer">
-        <button type="button" class="btn btn-primary mx-auto py-2 px-3 text-uppercase" (click)="addConnection()"
+        <button type="button" class="btn btn-primary mx-auto" (click)="addConnection()"
         *ngIf="!isConnection">Add Connection</button>
         <span class="text-light mx-auto py-2" *ngIf="isConnection">You are connected with this user!</span>
       </div>

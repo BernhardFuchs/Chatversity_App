@@ -1,9 +1,9 @@
-import { Component, OnInit } from '@angular/core';
-import { AuthService } from './Core/_services/auth.service';
-import { User } from './Core/_models/user';
-import { Router } from '@angular/router';
-import { SwUpdate } from '@angular/service-worker';
-import { MessagingService } from './Core/_services/messaging.service';
+import { Component, OnInit } from '@angular/core'
+import { AuthService } from './Core/_services/auth.service'
+import { User } from './Core/_models/user'
+import { Router } from '@angular/router'
+import { SwUpdate } from '@angular/service-worker'
+import { MessagingService } from './Core/_services/messaging.service'
 
 
 @Component({
@@ -14,29 +14,25 @@ import { MessagingService } from './Core/_services/messaging.service';
 })
 
 export class AppComponent implements OnInit {
-  currentUser: any;
-  title = 'Chatversity';
-  update = false;
-  currUser: any;
+  currentUserLoggedIn: any
+  title = 'Chatversity'
+  update = false
+  currUser: any
+  currentUser: any
   // chatkitUser: any;
 
   constructor(
       private router: Router,
-      private authenticationService: AuthService,
+      private authService: AuthService,
       private updates: SwUpdate,
-      private messagingService: MessagingService
-  ) {
-    this.authenticationService.currentUser.subscribe(x => this.currentUser = x);
-    // this.authenticationService.chatkitUser.subscribe(y => this.chatkitUser = y);
-  }
+      private messageService: MessagingService) {}
 
   //
   // ─── LOGOUT USER ────────────────────────────────────────────────────────────────
   //
 
     logout() {
-      this.authenticationService.logout();
-      this.router.navigate(['/login']);
+      this.authService.logout()
     }
   // ────────────────────────────────────────────────────────────────────────────────
 
@@ -52,39 +48,38 @@ export class AppComponent implements OnInit {
       || this.router.url === '/forgot'
       || this.router.url === '/new-user'
       || this.router.url === '/404') {
-        return false;
+        return false
       }
 
-      return true;
+      return true
     }
   // ! ────────────────────────────────────────────────────────────────────────────────
 
 
 
   ngOnInit() {
-    // this.currentUser = this.authenticationService.currentUser;
-    console.log('%cWelcome to Chatversity!', 'font-size: 20px; color: #186fa0;');
+    console.log('%cWelcome to Chatversity!', 'font-size: 20px; color: #186fa0;')
+    console.log('Initializing app')
 
-    console.log('OKTA USER:', this.currentUser);
+    this.authService.getCurrentUser().subscribe((user) => {
 
-    // if (this.currentUser) {
-    //   this.messagingService.chatManager.connect()
-    //   .then((user) => {
-    //     this.currUser = user;
-    //     console.log(user);
-    //     user.rooms.forEach(room => {
-    //       user.subscribeToRoomMultipart({
-    //         roomId: room.id,
-    //         messageLimit: 10
-    //       });
-    //     });
-    //   });
+      this.currentUser = user
+      // if (user) { this.currentUser = user; return } else {
+      //   this.messageService.initChatkit(this.authService.getUserId())
+      // }
 
-    //   this.updates.available.subscribe(event => {
-    //     this.update = true;
-    //   });
+      console.log(user)
+    })
 
-    //   console.log(this.currentUser);
-    // }
+  //   this.messageService.initChatkit(this.authService.getUserId())
+  //   .then(chatkitUser => {
+  //     console.log('got chatkit user');
+  //     console.log(chatkitUser);
+  //     this.authService.currentUser = chatkitUser;
+  //     this.currentUser = chatkitUser;
+  //     console.log(this.authService.currentUser);
+
+  // });
+    console.log('User Logged In: ' + this.authService.userLoggedIn())
   }
 }

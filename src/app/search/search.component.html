@@ -1,0 +1,17 @@
+<div class="container-fluid" style="height:100vh;">
+
+    <app-top-bar [viewName]="'Search'" [headerText]="'Users & Rooms'"></app-top-bar>
+  
+    <div class="row page-content">
+      <div class="col-12 col-lg-3" style="background-color:#F1F8FC; border-bottom:1px solid #DAE6ED;">
+        <div class="my-3 px-1">
+          <button class="btn btn-block custom-btn text-left mr-4 my-2 p-3"
+          [ngClass]="{ 'active': true }">Search</button>
+        </div>
+      </div>
+  
+      <div class="col-12 col-lg-9" style="background-color: #fafdff; border-left:1px solid #DAE6ED;">
+          <app-search-bar [userType]="true" [roomType]="true"></app-search-bar>
+      </div>
+    </div>
+  </div>

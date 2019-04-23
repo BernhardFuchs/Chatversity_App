@@ -32,7 +32,8 @@
             ],
             "styles": [
               "src/styles-app-loading.scss",
-              "src/styles.scss"
+              "src/styles.scss",
+              "./node_modules/filepond/dist/filepond.min.css"
             ],
             "scripts": []
           },

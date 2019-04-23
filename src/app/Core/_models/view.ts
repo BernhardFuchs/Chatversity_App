@@ -1,5 +1,5 @@
 export class View {
-    id: number;
-    name: string;
-    current: boolean;
+    id: number
+    name: string
+    current: boolean
 }

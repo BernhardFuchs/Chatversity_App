@@ -18,12 +18,25 @@
       <!-- end edit buttons -->
 
       <div class="col-12 col-sm-12 col-lg-8 my-3">
-        <ng-container *ngIf="chatkitUser">
+        <ng-container *ngIf="currentUser">
+          <!-- BEGIN FORM -->
           <form *ngIf="editingForm" id="profileEditForm" [formGroup]="profileForm" (ngSubmit)="onSubmit()">
   
             <div *ngIf="submitted && f.name.errors">
               <div class="alert alert-danger" role="alert">Unable to update profile.</div>
             </div>
+
+          <!-- Profile Picture -->
+          <figure>
+              <img src="{{ currentUser.avatarURL }}" alt="User Profile Picture">
+              <!-- <input type="file" name="filepond" data-max-files="10" required> -->
+              <file-pond #myPond 
+                [options]="pondOptions" 
+                [files]="pondFiles"
+                (oninit)="pondHandleInit()"
+                (onaddfile)="pondHandleAddFile($event)">
+              </file-pond>
+            </figure>
             
           <!--Name-->
           <div class="form-group mb-3">
@@ -82,42 +95,43 @@
 
           </form>
 
-          <div *ngIf="!editingForm">
+          <!-- BEGIN PROFILE DISPLAY -->
+          <div *ngIf="!editingForm && currentUser">
 
             <!--Name-->
             <div class="mb-3">
               <span class="no-edit-label text-uppercase">Name</span> <br>
-              <span *ngIf="this.chatkitUser">{{ this.chatkitUser.name }}</span>
+              <span *ngIf="currentUser">{{ currentUser.name }}</span>
             </div>
       
             <!--Bio-->
             <div class="mb-3">
               <span class="no-edit-label text-uppercase">Bio</span> <br>
-              <span> {{ this.chatkitUser.customData.bio }}</span>
+              <span> {{ currentUser.customData.bio }}</span>
             </div>
             
             <!--Major-->
             <div class="mb-3">
               <span class="no-edit-label text-uppercase">Major</span> <br>
-              <span> {{ this.chatkitUser.customData.major }}</span>
+              <span> {{ currentUser.customData.major }}</span>
             </div>
 
             <!--Graduation Year-->
             <div class="mb-3">
               <span class="no-edit-label text-uppercase">Graduation Year</span> <br>
-              <span> {{ this.chatkitUser.customData.graduationYear }}</span>
+              <span> {{ currentUser.customData.graduationYear }}</span>
             </div>
 
             <!--Interests-->
             <div class="mb-3">
               <span class="no-edit-label text-uppercase">Interests</span> <br>
-              <span> {{ this.chatkitUser.customData.interests }}</span>
+              <span> {{ currentUser.customData.interests }}</span>
             </div>
 
             <!--Clubs-->
             <div class="mb-3">
               <span class="no-edit-label text-uppercase">Clubs</span> <br>
-              <span> {{ this.chatkitUser.customData.clubs }}</span>
+              <span> {{ this.currentUser.customData.clubs }}</span>
             </div>
 
           </div>

@@ -8,7 +8,7 @@
             </div>
 
             <div class="col-12 col-lg-7 text-left" id="profile-content">
-                <ng-container *ngIf="this.chatkitUser">
+                <ng-container *ngIf="this.currentUser">
                     <!-- User Name -->
                     <div class="h2 text-secondary text-light-weight">{{ this.name }}</div>
                     <!-- {{ this.user.avatarURL }} -->
@@ -17,12 +17,16 @@
                     </ng-container> -->
 
                     <!-- User Major and Graduation Year -->
-                    <div>
-                        <span class="text-primary text-uppercase" style="font-weight:100;">{{ this.major }} &nbsp;|&nbsp; Class of {{ this.graduationYear }}</span><br>
+                    <div *ngIf="(this.major || this.graduationYear)">
+                        <span class="text-primary text-uppercase" style="font-weight:100;">
+                            <span *ngIf="this.major">{{ this.major }}</span>
+                            <span *ngIf="(this.major && this.graduationYear)"> &nbsp;|&nbsp;</span>
+                            <span *ngIf="this.graduationYear"> Class of {{ this.graduationYear }}</span>
+                        </span><br>
                     </div>
     
                     <!--User Bio-->
-                    <div class="text-left mt-3">
+                    <div class="text-left mt-3" *ngIf="this.bio">
                         <p>{{this.bio}}</p> 
                     </div>
     

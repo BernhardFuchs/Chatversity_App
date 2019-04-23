@@ -52,17 +52,16 @@
 }
 .chat-footer input {
     width:100%;
-    background: #FFFFFF;
+    background: #FAFAFA;
     /* Primary 25 */
-    border: 1px solid #C9EBFF;
+    border: 1px solid #E4E4E4;
     box-sizing: border-box;
     //box-shadow: inset 0px 1px 3px rgba(21, 157, 246, 0.5);
     border-radius: 3px;
     font-style: normal;
-    font-weight: 500;
+    font-weight: 400;
     font-size: 14px;
     line-height: normal;
-    letter-spacing: 0.75px;
     padding:10px;
     color: #0E425F;
 }
@@ -76,4 +75,31 @@
     color: #0E425F;
     border: 1px solid #bddef1;
 }
-  
+
+.message{
+    border:1px solid;
+    border-radius: 15px;
+    background-color: white;
+}
+.my-message{
+    text-align: left;    
+    border-color: #0088d6;
+}
+
+.user-message{
+    text-align: left;
+    border-color:rgb(196, 229, 250);
+}
+
+.message.my-message {
+    background-color:#26B1FF !important;
+    .chat-user-link {
+        color:white !important;
+    }
+    .message-date {
+        color:#cceeff !important;
+    }
+    .message-body {
+        color:white !important;
+    }
+}

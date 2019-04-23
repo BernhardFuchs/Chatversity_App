@@ -2,3 +2,11 @@
     color: #96B7C9;
     opacity: 1; 
   }
+
+  label {
+    font-size:14px !important;
+  }
+
+  input {
+    background-color: #fafafa !important;
+  }
