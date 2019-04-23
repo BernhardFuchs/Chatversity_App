@@ -1,1 +1,1 @@
-.app-mount{flex-direction:row;background-color:#202225;display:-webkit-box;display:-ms-flexbox;display:flex;height:100vh;overflow:hidden;position:absolute;width:100vw}#primary_navigation{height:100%;width:88px;background-color:white;z-index:2}
+.app-mount{flex-direction:row;display:-webkit-box;display:-ms-flexbox;display:flex;height:100vh;position:absolute;width:100vw}.nav-wrapper{width:88px;position:relative}#primary_navigation{width:88px;background-color:white;z-index:10;height:100vh;position:fixed;top:0}

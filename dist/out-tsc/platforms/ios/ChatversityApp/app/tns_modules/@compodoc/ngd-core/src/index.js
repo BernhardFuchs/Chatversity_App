@@ -1,0 +1,9 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var logger_1 = require("./lang/logger");
+exports.logger = logger_1.logger;
+var utilities_1 = require("./lang/utilities");
+exports.compilerHost = utilities_1.compilerHost;
+exports.d = utilities_1.d;
+exports.getNewLineCharacter = utilities_1.getNewLineCharacter;
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiaW5kZXguanMiLCJzb3VyY2VSb290IjoiIiwic291cmNlcyI6WyIuLi8uLi8uLi8uLi8uLi8uLi8uLi8uLi8uLi8uLi9wbGF0Zm9ybXMvaW9zL0NoYXR2ZXJzaXR5QXBwL2FwcC90bnNfbW9kdWxlcy9AY29tcG9kb2MvbmdkLWNvcmUvc3JjL2luZGV4LnRzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiI7O0FBQUEsd0NBRXVCO0FBRHJCLDBCQUFBLE1BQU0sQ0FBQTtBQUVSLDhDQUkwQjtBQUh4QixtQ0FBQSxZQUFZLENBQUE7QUFDWix3QkFBQSxDQUFDLENBQUE7QUFDRCwwQ0FBQSxtQkFBbUIsQ0FBQSIsInNvdXJjZXNDb250ZW50IjpbImV4cG9ydCB7XG4gIGxvZ2dlclxufSBmcm9tICcuL2xhbmcvbG9nZ2VyJztcbmV4cG9ydCB7XG4gIGNvbXBpbGVySG9zdCxcbiAgZCxcbiAgZ2V0TmV3TGluZUNoYXJhY3RlclxufSBmcm9tICcuL2xhbmcvdXRpbGl0aWVzJztcbiJdfQ==

@@ -1,7 +1,10 @@
 {
   "name": "Chatversity",
   "nativescript": {
-    "id": "org.nativescript.Chatversity"
+    "id": "org.nativescript.Chatversity",
+    "tns-ios": {
+      "version": "5.3.1"
+    }
   },
   "version": "0.0.0",
   "scripts": {
@@ -55,6 +58,7 @@
     "reflect-metadata": "~0.1.12",
     "rxjs": "~6.3.3",
     "tns-core-modules": "~5.2.0",
+    "uglifyjs-webpack-plugin": "^2.1.2",
     "zone.js": "^0.8.26"
   },
   "devDependencies": {
@@ -76,7 +80,7 @@
     "karma-jasmine-html-reporter": "^0.2.2",
     "nativescript-dev-sass": "^1.7.0",
     "nativescript-dev-typescript": "~0.8.0",
-    "nativescript-dev-webpack": "^0.20.0",
+    "nativescript-dev-webpack": "^0.20.3",
     "protractor": "^5.4.2",
     "ts-node": "~5.0.1",
     "tslint": "~5.9.1",

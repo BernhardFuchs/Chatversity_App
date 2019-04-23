@@ -1,0 +1,18 @@
+"use strict";
+function __export(m) {
+    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
+}
+Object.defineProperty(exports, "__esModule", { value: true });
+var uri_1 = require("./uri");
+var http_1 = require("./schemes/http");
+uri_1.SCHEMES[http_1.default.scheme] = http_1.default;
+var https_1 = require("./schemes/https");
+uri_1.SCHEMES[https_1.default.scheme] = https_1.default;
+var mailto_1 = require("./schemes/mailto");
+uri_1.SCHEMES[mailto_1.default.scheme] = mailto_1.default;
+var urn_1 = require("./schemes/urn");
+uri_1.SCHEMES[urn_1.default.scheme] = urn_1.default;
+var urn_uuid_1 = require("./schemes/urn-uuid");
+uri_1.SCHEMES[urn_uuid_1.default.scheme] = urn_uuid_1.default;
+__export(require("./uri"));
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiaW5kZXguanMiLCJzb3VyY2VSb290IjoiIiwic291cmNlcyI6WyIuLi8uLi8uLi8uLi8uLi8uLi8uLi8uLi8uLi8uLi8uLi9wbGF0Zm9ybXMvaW9zL2J1aWxkL0RlYnVnLWlwaG9uZXNpbXVsYXRvci9DaGF0dmVyc2l0eUFwcC5hcHAvYXBwL3Ruc19tb2R1bGVzL3VyaS1qcy9zcmMvaW5kZXgudHMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6Ijs7Ozs7QUFBQSw2QkFBZ0M7QUFFaEMsdUNBQWtDO0FBQ2xDLGFBQU8sQ0FBQyxjQUFJLENBQUMsTUFBTSxDQUFDLEdBQUcsY0FBSSxDQUFDO0FBRTVCLHlDQUFvQztBQUNwQyxhQUFPLENBQUMsZUFBSyxDQUFDLE1BQU0sQ0FBQyxHQUFHLGVBQUssQ0FBQztBQUU5QiwyQ0FBc0M7QUFDdEMsYUFBTyxDQUFDLGdCQUFNLENBQUMsTUFBTSxDQUFDLEdBQUcsZ0JBQU0sQ0FBQztBQUVoQyxxQ0FBZ0M7QUFDaEMsYUFBTyxDQUFDLGFBQUcsQ0FBQyxNQUFNLENBQUMsR0FBRyxhQUFHLENBQUM7QUFFMUIsK0NBQXNDO0FBQ3RDLGFBQU8sQ0FBQyxrQkFBSSxDQUFDLE1BQU0sQ0FBQyxHQUFHLGtCQUFJLENBQUM7QUFFNUIsMkJBQXNCIiwic291cmNlc0NvbnRlbnQiOlsiaW1wb3J0IHsgU0NIRU1FUyB9IGZyb20gXCIuL3VyaVwiO1xuXG5pbXBvcnQgaHR0cCBmcm9tIFwiLi9zY2hlbWVzL2h0dHBcIjtcblNDSEVNRVNbaHR0cC5zY2hlbWVdID0gaHR0cDtcblxuaW1wb3J0IGh0dHBzIGZyb20gXCIuL3NjaGVtZXMvaHR0cHNcIjtcblNDSEVNRVNbaHR0cHMuc2NoZW1lXSA9IGh0dHBzO1xuXG5pbXBvcnQgbWFpbHRvIGZyb20gXCIuL3NjaGVtZXMvbWFpbHRvXCI7XG5TQ0hFTUVTW21haWx0by5zY2hlbWVdID0gbWFpbHRvO1xuXG5pbXBvcnQgdXJuIGZyb20gXCIuL3NjaGVtZXMvdXJuXCI7XG5TQ0hFTUVTW3Vybi5zY2hlbWVdID0gdXJuO1xuXG5pbXBvcnQgdXVpZCBmcm9tIFwiLi9zY2hlbWVzL3Vybi11dWlkXCI7XG5TQ0hFTUVTW3V1aWQuc2NoZW1lXSA9IHV1aWQ7XG5cbmV4cG9ydCAqIGZyb20gXCIuL3VyaVwiO1xuIl19

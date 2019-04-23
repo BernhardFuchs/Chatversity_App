@@ -1,0 +1,18 @@
+"use strict";
+// This file can be replaced during build by using the `fileReplacements` array.
+// `ng build ---prod` replaces `environment.ts` with `environment.prod.ts`.
+// The list of file replacements can be found in `angular.json`.
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.environment = {
+    production: false,
+    apiUrl: 'http://localhost:3200',
+    chatkitTestTokenEndpoint: 'https://us1.pusherplatform.io/services/chatkit_token_provider/v1/a54bdf12-93d6-46f9-be3b-bfa837917fb5',
+};
+/*
+ * In development mode, to ignore zone related error stack frames such as
+ * `zone.run`, `zoneDelegate.invokeTask` for easier debugging, you can
+ * import the following file, but please comment it out in production mode
+ * because it will have performance impact when throw error
+ */
+// import 'zone.js/dist/zone-error';  // Included with Angular CLI.
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiZW52aXJvbm1lbnQucHJvZC5qcyIsInNvdXJjZVJvb3QiOiIiLCJzb3VyY2VzIjpbIi4uLy4uLy4uL3NyYy9lbnZpcm9ubWVudHMvZW52aXJvbm1lbnQucHJvZC50cyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiO0FBQUEsZ0ZBQWdGO0FBQ2hGLDJFQUEyRTtBQUMzRSxnRUFBZ0U7O0FBRW5ELFFBQUEsV0FBVyxHQUFHO0lBQ3pCLFVBQVUsRUFBRSxLQUFLO0lBQ2pCLE1BQU0sRUFBRSx1QkFBdUI7SUFDL0Isd0JBQXdCLEVBQUUsdUdBQXVHO0NBQ2xJLENBQUM7QUFFRjs7Ozs7R0FLRztBQUNILG1FQUFtRSIsInNvdXJjZXNDb250ZW50IjpbIi8vIFRoaXMgZmlsZSBjYW4gYmUgcmVwbGFjZWQgZHVyaW5nIGJ1aWxkIGJ5IHVzaW5nIHRoZSBgZmlsZVJlcGxhY2VtZW50c2AgYXJyYXkuXG4vLyBgbmcgYnVpbGQgLS0tcHJvZGAgcmVwbGFjZXMgYGVudmlyb25tZW50LnRzYCB3aXRoIGBlbnZpcm9ubWVudC5wcm9kLnRzYC5cbi8vIFRoZSBsaXN0IG9mIGZpbGUgcmVwbGFjZW1lbnRzIGNhbiBiZSBmb3VuZCBpbiBgYW5ndWxhci5qc29uYC5cblxuZXhwb3J0IGNvbnN0IGVudmlyb25tZW50ID0ge1xuICBwcm9kdWN0aW9uOiBmYWxzZSxcbiAgYXBpVXJsOiAnaHR0cDovL2xvY2FsaG9zdDozMjAwJywgLy8gVE9ETzogdXBkYXRlIHRoaXMgbSB0byB0aGUgbm9kZSBzZXJ2ZXIgYWZ0ZXIgZ29pbmcgbGl2ZVxuICBjaGF0a2l0VGVzdFRva2VuRW5kcG9pbnQ6ICdodHRwczovL3VzMS5wdXNoZXJwbGF0Zm9ybS5pby9zZXJ2aWNlcy9jaGF0a2l0X3Rva2VuX3Byb3ZpZGVyL3YxL2E1NGJkZjEyLTkzZDYtNDZmOS1iZTNiLWJmYTgzNzkxN2ZiNScsXG59O1xuXG4vKlxuICogSW4gZGV2ZWxvcG1lbnQgbW9kZSwgdG8gaWdub3JlIHpvbmUgcmVsYXRlZCBlcnJvciBzdGFjayBmcmFtZXMgc3VjaCBhc1xuICogYHpvbmUucnVuYCwgYHpvbmVEZWxlZ2F0ZS5pbnZva2VUYXNrYCBmb3IgZWFzaWVyIGRlYnVnZ2luZywgeW91IGNhblxuICogaW1wb3J0IHRoZSBmb2xsb3dpbmcgZmlsZSwgYnV0IHBsZWFzZSBjb21tZW50IGl0IG91dCBpbiBwcm9kdWN0aW9uIG1vZGVcbiAqIGJlY2F1c2UgaXQgd2lsbCBoYXZlIHBlcmZvcm1hbmNlIGltcGFjdCB3aGVuIHRocm93IGVycm9yXG4gKi9cbi8vIGltcG9ydCAnem9uZS5qcy9kaXN0L3pvbmUtZXJyb3InOyAgLy8gSW5jbHVkZWQgd2l0aCBBbmd1bGFyIENMSS5cbiJdfQ==

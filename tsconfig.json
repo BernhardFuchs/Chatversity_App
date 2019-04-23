@@ -2,6 +2,9 @@
     "compileOnSave": false,
     "compilerOptions": {
         "outDir": "./dist/out-tsc",
+        "module": "commonjs",
+        "noEmitHelpers": true,
+        "noEmitOnError": true,
         "declaration": false,
         "moduleResolution": "node",
         "emitDecoratorMetadata": true,
@@ -20,10 +23,13 @@
         "paths": {
             "~/*": [
                 "src/*",
+                "./node_modules/tns-core-modules/*",
+                "./node_modules/*"
             ]
         }
     },
     "exclude": [
+        "**/*.aot.ts",
         "**/*.tns.ts",
         "**/*.android.ts",
         "**/*.ios.ts",

@@ -180,7 +180,7 @@ export class SignupComponent implements OnInit {
 
 
 // Dont place any code below this final line as it will not execute when running the NativeScript app
-// This is the inital starting point of the app!  Dont change unless we do a team discussin and design changes
+// This is the inital starting point of the app!  Dont change unless we do a team discussion and design changes
 // ~ Noah
 
 application.run({ moduleName: "signup"  });
